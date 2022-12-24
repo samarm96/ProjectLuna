@@ -33,11 +33,18 @@ public class Player {
     }
 
     public void addHealth(int healthIncrement){
+        if((this.health += healthIncrement) > 100){
+            this.health = 100;
+        } else {
         this.health += healthIncrement;
-    }
+        }    }
 
     public void removeHealth(int healthIncrement){
+        if((this.health -= healthIncrement) < 0){
+            this.health = 0;
+        } else {
         this.health -= healthIncrement;
+        }
     }
 
 

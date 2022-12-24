@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 
 public class RenderingFunctions {
@@ -118,9 +115,26 @@ public class RenderingFunctions {
         return boundaryWalls;
     }
 
-    public static Rectangle DrawHealthBar(int health){
-        Rectangle healthBar = new Rectangle();
+    public static Rectangle RenderHealthBar(int health){
+        int SCREEN_HEIGHT = Gdx.graphics.getHeight();
+        int SCREEN_WIDTH = Gdx.graphics.getWidth();
+        int maxHealth = 100;
 
+        float healthBarBuffer = 10;
+
+        float xLocation = SCREEN_WIDTH-SCREEN_WIDTH/4 + healthBarBuffer;
+        float yLocation = SCREEN_HEIGHT/2;
+        float height = 24;
+
+        float width = (health/maxHealth)*SCREEN_WIDTH/4;
+        if(width < 0){
+            width = 0;
+        }
+
+        Rectangle healthBar = new Rectangle();
+        healthBar.setPosition(xLocation , yLocation);
+        healthBar.setWidth(width);
+        healthBar.setHeight(height);
 
         return healthBar;
     }

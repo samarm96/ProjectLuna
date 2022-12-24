@@ -8,6 +8,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class GameScreen implements Screen {
@@ -21,33 +22,43 @@ public class GameScreen implements Screen {
 
 	Player player;
 	Sprite playerSprite;
-    Texture playerSpriteTexture;
-	Texture wallImage;
 	float lastPlayerY;
 	float lastPlayerX;
+
+	Texture playerSpriteTexture;
+	Texture wallImage;
+	Texture healthImage;
+
 	Wall wall;
 	List<Wall> walls;
+	Rectangle healthBar;
 
+	float originalHealthBarWidth;
 	public GameScreen(final ProjectLuna game) {
 		this.game = game;
 
         playerSpriteTexture = new Texture("../assets/kirby.jpg");
 		wallImage = new Texture("../assets/wall.jpg");
+		healthImage = new Texture("../assets/red.png");
 
 		// -------- CREATE CAMERA --------
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
 
-		// -------- REPRESENT PLAYER AS A RECTANGLE
+		// -------- REPRESENT PLAYER AS A SPRITE --------
 
 		float[] location = new float[]{SCREEN_WIDTH / 4, SCREEN_HEIGHT/ 4}; // Sets the initial location of the character
 		float[] dimensions = new float[]{40, SCREEN_HEIGHT/20}; // Set width/height of player character
 
 		player = new Player(playerSpriteTexture, location, dimensions);
+		player.setHealth(100);
 		playerSprite = player.getSprite();
 
+		// -------- REPRESENT HEALTHBAR AS A RECTANGLE -------- 
+		healthBar = RenderingFunctions.RenderHealthBar(player.getHealth());
+		originalHealthBarWidth = healthBar.getWidth();
 
-		// -------- REPRESENT WALLS AS RECTANGLES --------
+		// -------- REPRESENT WALLS AS SPRITES --------
 		wall = new Wall(wallImage);
 		float wallDimensions[] = new float[]{40,SCREEN_HEIGHT/20};
 		wall.setDimensions(wallDimensions);
@@ -57,6 +68,9 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
+
+
+
 
         // Clear screen with set color
 		ScreenUtils.clear(0, 0, 0.2f, 1);
@@ -70,11 +84,17 @@ public class GameScreen implements Screen {
 		game.batch.begin();
 		
 		// -------- DRAW PLAYER CHARACTER 
-		game.batch.draw(playerSprite, playerSprite.getX(), playerSprite.getY());
+		game.batch.draw(playerSprite, playerSprite.getX(), playerSprite.getY(), 
+		playerSprite.getWidth(), playerSprite.getHeight());
 		
+		//  -------- DRAW HEALTHBAR --------
+		game.batch.draw(healthImage, healthBar.getX(), healthBar.getY(), 
+		healthBar.getWidth(), healthBar.getHeight());
+
 		// -------- DRAW WALLS --------
 		for(int i = 0; i < walls.size();i++){
-			game.batch.draw(wallImage, walls.get(i).getLocation()[0], walls.get(i).getLocation()[1]);
+			game.batch.draw(wallImage, walls.get(i).getLocation()[0], walls.get(i).getLocation()[1], 
+			walls.get(i).getWidth(), walls.get(i).getHeight());
 		}
 		game.batch.end();
 
@@ -134,6 +154,26 @@ public class GameScreen implements Screen {
 					playerSprite.setY(lastPlayerY);
 				}				
 			}  	
+		}
+
+		if(Gdx.input.isKeyPressed(Keys.B)){
+			player.removeHealth(1);
+			System.out.println(healthBar.getWidth());
+			if((originalHealthBarWidth-(originalHealthBarWidth- ((float) player.getHealth()/100)*originalHealthBarWidth)) < 0){
+				healthBar.setWidth(0);
+			} else {
+				healthBar.setWidth(originalHealthBarWidth-(originalHealthBarWidth- ((float) player.getHealth()/100)*originalHealthBarWidth));
+				System.out.println("Health: " + player.getHealth());
+			}
+		}
+		
+		if(Gdx.input.isKeyPressed(Keys.A)){
+			player.addHealth(1);
+			if((originalHealthBarWidth-(originalHealthBarWidth- ((float) player.getHealth()/100)*originalHealthBarWidth)) > 100){
+				healthBar.setWidth(originalHealthBarWidth);
+			} else {
+				healthBar.setWidth(originalHealthBarWidth-(originalHealthBarWidth- ((float) player.getHealth()/100)*originalHealthBarWidth));
+			}
 		}
 
 	}
