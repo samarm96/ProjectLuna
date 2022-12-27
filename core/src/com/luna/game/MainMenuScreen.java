@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 public class MainMenuScreen implements Screen {
 
-  final ProjectLuna game;
+	final ProjectLuna game;
 	OrthographicCamera camera;
 
 	public MainMenuScreen(final ProjectLuna gam) {
@@ -30,32 +30,26 @@ public class MainMenuScreen implements Screen {
 		game.batch.end();
 
 		if (Gdx.input.isTouched()) {
-				game.setScreen(new GameScreen(game));
+			game.setScreen(new GameScreen(game));
 			dispose();
 		}
 	}
 
 	@Override
-	public void resize(int width, int height) {
-	}
+	public void resize(int width, int height) {}
 
 	@Override
-	public void show() {
-	}
+	public void show() {}
 
 	@Override
-	public void hide() {
-	}
+	public void hide() {}
 
 	@Override
-	public void pause() {
-	}
+	public void pause() {}
 
 	@Override
-	public void resume() {
-	}
+	public void resume() {}
 
 	@Override
-	public void dispose() {
-	}
+	public void dispose() {}
 }
