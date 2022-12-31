@@ -2,11 +2,12 @@ package com.luna.game.Entities;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.luna.game.Engine.Utilities;
 
 public class HealthBar extends Entity {
 
-    private float originalHealthBarWidth;// = SCREEN_WIDTH / 4;
-
+    private float originalHealthBarWidth;
+	
 
     public HealthBar(Texture image, float[] initialLocation, float[] initialDimensions,
             int health) {
@@ -20,13 +21,16 @@ public class HealthBar extends Entity {
     public static Sprite RenderHealthBar(int health) {
         int maxHealth = 100;
 
-        float healthBarBuffer = 10;
+        final int WORLD_HEIGHT = Utilities.WORLD_HEIGHT;
+        final int WORLD_WIDTH = Utilities.WORLD_WIDTH;
 
-        float xLocation = SCREEN_WIDTH - SCREEN_WIDTH / 4 + healthBarBuffer;
-        float yLocation = SCREEN_HEIGHT / 2;
-        float height = 24;
+        float healthBarBuffer = 5;
 
-        float width = (health / maxHealth) * SCREEN_WIDTH / 4;
+        float xLocation = WORLD_WIDTH - WORLD_WIDTH / 4 + healthBarBuffer;
+        float yLocation = WORLD_HEIGHT / 2;
+        float height = WORLD_HEIGHT/20;
+
+        float width = (health / maxHealth) * WORLD_WIDTH / 4 - healthBarBuffer*2;
         if (width < 0) {
             width = 0;
         }

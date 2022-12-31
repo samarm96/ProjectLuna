@@ -10,7 +10,7 @@ public class DesktopLauncher {
 		config.setWindowSizeLimits(800, 480, 800, 480);
 		config.setWindowedMode(800, 480);
 		config.setForegroundFPS(60);
-		config.setTitle("Rpg");
+		config.setTitle("Project Luna");
 		new Lwjgl3Application(new ProjectLuna(), config);
 	}
 }

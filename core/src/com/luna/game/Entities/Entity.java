@@ -2,23 +2,23 @@ package com.luna.game.Entities;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.luna.game.Engine.Utilites;
+import com.luna.game.Engine.Utilities;
 
 public class Entity {
 
-    final static int SCREEN_HEIGHT = Utilites.SCREEN_HEIGHT;
-    final static int SCREEN_WIDTH = Utilites.SCREEN_WIDTH;
+    final static int SCREEN_HEIGHT = Utilities.SCREEN_HEIGHT;
+    final static int SCREEN_WIDTH = Utilities.SCREEN_WIDTH;
 
     private Sprite sprite;
 
     public Entity(Texture image, float[] initialLocation, float[] initialDimensions) {
 
         this.sprite = new Sprite(image);
-        sprite.setX(initialLocation[0]);
-        sprite.setY(initialLocation[1]);
+        this.sprite.setX(initialLocation[0]);
+        this.sprite.setY(initialLocation[1]);
 
         // Set width/height of player character
-        sprite.setSize(initialDimensions[0], initialDimensions[1]);
+        this.sprite.setSize(initialDimensions[0], initialDimensions[1]);
 
     }
 

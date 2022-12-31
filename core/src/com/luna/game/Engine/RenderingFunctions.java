@@ -8,54 +8,51 @@ import com.luna.game.Entities.Wall;
 
 public class RenderingFunctions {
 
-    final static int SCREEN_HEIGHT = Utilites.SCREEN_HEIGHT;
-    final static int SCREEN_WIDTH = Utilites.SCREEN_WIDTH;
 
     public static List<Wall> RenderWallLine(Texture texture, float x, float y, float width,
             float height, int number, boolean verticalFlag, boolean downLeft) {
         List<Wall> walls = new ArrayList<>();
 
-        if (y - height * number > SCREEN_HEIGHT - y && verticalFlag == true
+        final int worldHeight = Utilities.WORLD_HEIGHT;
+        final int worldWidth = Utilities.WORLD_WIDTH;
+
+        if (y - height * number > worldHeight - y && verticalFlag == true
                 && downLeft == true) {
             System.out.println("Cannot create walls, desired size is larger than screen size.");
             try {
                 throw new Exception(
                         "Cannot create walls, desired size is larger than screen size.");
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
-        if (y + height * number > SCREEN_HEIGHT - y && verticalFlag == true
+        if (y + height * number > worldHeight - y && verticalFlag == true
                 && downLeft == false) {
             System.out.println("Cannot create walls, desired size is larger than screen size.");
             try {
                 throw new Exception(
                         "Cannot create walls, desired size is larger than screen size.");
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
-        if (x - width * number > SCREEN_WIDTH - x && verticalFlag == false
+        if (x - width * number > worldWidth - x && verticalFlag == false
                 && downLeft == true) {
             System.out.println("Cannot create walls, desired size is larger than screen size.");
             try {
                 throw new Exception(
                         "Cannot create walls, desired size is larger than screen size.");
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
-        if (x + width * number > SCREEN_WIDTH - x && verticalFlag == false
+        if (x + width * number > worldWidth - x && verticalFlag == false
                 && downLeft == false) {
             System.out.println("Cannot create walls, desired size is larger than screen size.");
             try {
                 throw new Exception(
                         "Cannot create walls, desired size is larger than screen size.");
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -92,11 +89,11 @@ public class RenderingFunctions {
             float wallHeight) {
         List<Wall> boundaryWalls = new ArrayList<>();
 
-        float screenWidth = SCREEN_WIDTH;
-        float screenHeight = SCREEN_HEIGHT;
+        float worldWidth = Utilities.WORLD_WIDTH;;
+        float worldHeight = Utilities.WORLD_HEIGHT;
 
         boundaryWalls = RenderSquareFromCorner(texture, wallWidth, wallHeight, (float) 0, (float) 0,
-                screenHeight - 1, screenWidth - 1);
+        worldHeight, worldWidth);
 
         return boundaryWalls;
     }
@@ -110,10 +107,10 @@ public class RenderingFunctions {
         List<Wall> bottomWalls = RenderWallLine(texture, cornerX, cornerY, wallWidth, wallHeight,
                 Math.round(squareWidth / wallWidth), false, false);
         List<Wall> leftWalls = RenderWallLine(texture, cornerX, cornerY + wallHeight, wallWidth,
-                wallHeight, Math.round((squareHeight - wallHeight) / wallHeight), true, false);
+                wallHeight, Math.round((squareHeight - wallHeight) / wallHeight)-1, true, false);
         List<Wall> rightWalls = RenderWallLine(texture, cornerX + squareWidth - wallWidth,
                 cornerY + wallHeight, wallWidth, wallHeight,
-                Math.round((squareHeight - wallHeight) / wallHeight), true, false);
+                Math.round((squareHeight - wallHeight) / wallHeight)-1, true, false);
 
         for (int i = 0; i < topWalls.size(); i++) {
             boundaryWalls.add(topWalls.get(i));

@@ -5,13 +5,18 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.PolygonRegion;
+import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.EarClippingTriangulator;
+import com.badlogic.gdx.math.Polygon;
+import com.luna.game.Engine.PlayerControls;
 import com.luna.game.Engine.RenderingFunctions;
-import com.luna.game.Engine.Utilites;
-import com.luna.game.Entities.Entity;
+import com.luna.game.Engine.Utilities;
 import com.luna.game.Entities.HealthBar;
 import com.luna.game.Entities.HostileNpc;
 import com.luna.game.Entities.Player;
@@ -19,8 +24,10 @@ import com.luna.game.Entities.Wall;
 
 public class GameScreen implements Screen {
 
-	final static int SCREEN_HEIGHT = Utilites.SCREEN_HEIGHT;
-	final static int SCREEN_WIDTH = Utilites.SCREEN_WIDTH;
+	final static int SCREEN_HEIGHT = Utilities.SCREEN_HEIGHT;
+	final static int SCREEN_WIDTH = Utilities.SCREEN_WIDTH;
+	final int WORLD_HEIGHT = Utilities.WORLD_HEIGHT;
+	final int WORLD_WIDTH = Utilities.WORLD_WIDTH;
 
 	final ProjectLuna game;
 
@@ -28,15 +35,19 @@ public class GameScreen implements Screen {
 
 	HealthBar bar;
 
-	private Player player;
-	private Sprite playerSprite;
+	Sprite backgroundSprite;
 
-	private float lastPlayerY;
-	private float lastPlayerX;
+	Polygon attackTriangle;
+	PolygonSpriteBatch polyBatch;
+	PolygonRegion triReg;
+
+	private Player player;
+	private PlayerControls controls;
 	private int playerMaxHealth;
 
+	boolean boundaryFlag;
+
 	private HostileNpc enemy;
-	private Sprite enemySprite;
 	private int enemyHealth;
 
 	private Texture playerSpriteTexture;
@@ -52,56 +63,63 @@ public class GameScreen implements Screen {
 	public GameScreen(final ProjectLuna game) {
 		this.game = game;
 
+		backgroundSprite = new Sprite(new Texture("../assets/black.jpg"));
+		backgroundSprite.setPosition(0, 0);
+		backgroundSprite.setSize(WORLD_WIDTH, WORLD_HEIGHT);
+
 		playerSpriteTexture = new Texture("../assets/kirby.jpg");
 		wallImage = new Texture("../assets/wall.jpg");
 		healthImage = new Texture("../assets/red.png");
 		demonImage = new Texture("../assets/demon.png");
 
+
 		// -------- CREATE CAMERA --------
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 800, 480);
+		camera = new OrthographicCamera(WORLD_WIDTH, WORLD_HEIGHT);
+		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
+		camera.update();
 
 		// -------- REPRESENT PLAYER AS A SPRITE --------
 		// Sets the initial location of the character
-		float[] location = new float[] {SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4};
+		float[] location = new float[] {WORLD_WIDTH / 4, WORLD_HEIGHT / 4};
 
 		// Set width/height of player character
-		float[] playerDimensions = new float[] {40, SCREEN_HEIGHT / 20};
+		float[] playerDimensions = new float[] {WORLD_WIDTH / 20, WORLD_HEIGHT / 20};
 		playerMaxHealth = 100;
 		player = new Player(playerSpriteTexture, location, playerDimensions, playerMaxHealth);
-		playerSprite = player.getSprite();
+		controls = new PlayerControls(player);
 
 
 		// -------- REPRESENT HEALTHBAR AS A RECTANGLE --------
-		float healthBarBuffer = 10;
-		float[] healthBarLocation = new float[]{SCREEN_WIDTH - SCREEN_WIDTH / 4 + healthBarBuffer, SCREEN_HEIGHT / 2};
-		bar = new HealthBar(healthImage, healthBarLocation, new float[]{0,0}, player.getHealth());
+		float[] healthBarLocation = new float[] {(float) (WORLD_WIDTH * .85), WORLD_WIDTH / 2};
+
+		bar = new HealthBar(healthImage, healthBarLocation, new float[] {0, 0}, player.getHealth());
 
 		// -------- CREATE ENEMY --------
-		float[] demonLocation = new float[] {SCREEN_WIDTH / 4, SCREEN_HEIGHT / 2};
-		float[] enemyDimensions = new float[] {40, SCREEN_HEIGHT / 20};
+		float[] demonLocation = new float[] {WORLD_WIDTH / 4, WORLD_HEIGHT / 2};
+		float[] enemyDimensions = new float[] {WORLD_WIDTH / 20, WORLD_HEIGHT / 20};
 		enemyHealth = 100;
 		enemy = new HostileNpc(demonImage, demonLocation, enemyDimensions, enemyHealth);
 		enemy.setAttack(100);
-		enemySprite = enemy.getSprite();
 
 		// -------- REPRESENT WALLS AS SPRITES --------
-		float wallDimensions[] = new float[] {40, SCREEN_HEIGHT / 20};
+		float wallDimensions[] = new float[] {WORLD_WIDTH / 20, WORLD_HEIGHT / 20};
 		float wallInitialLocation[] = new float[] {0, 0};
 		wall = new Wall(wallImage, wallInitialLocation, wallDimensions);
 
 		walls = RenderingFunctions.RenderSquareFromCorner(wallImage, wall.getSprite().getWidth(),
-				wall.getSprite().getHeight(), (float) 0, (float) 0, SCREEN_HEIGHT - 1,
-				SCREEN_WIDTH - SCREEN_WIDTH / 4);
+				wall.getSprite().getHeight(), (float) 0, (float) 0, WORLD_HEIGHT,
+				WORLD_WIDTH - WORLD_WIDTH / 4);
 
+
+		// -------- USED TO RENDER POLYGONS --------
+		polyBatch = new PolygonSpriteBatch();
 	}
 
 	@Override
 	public void render(float delta) {
 
 		// Clear screen with set color
-		ScreenUtils.clear(0, 0, 0.2f, 1);
-
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		// tell the camera to update its matrices.
 		camera.update();
 
@@ -110,96 +128,65 @@ public class GameScreen implements Screen {
 
 		game.batch.begin();
 
+		backgroundSprite.draw(game.batch);
+
 		// -------- DRAW PLAYER CHARACTER
-		drawEntity(player);
+		player.getSprite().draw(game.batch);
 
 		// -------- DRAW ENEMY CHARACTER
-		drawEntity(enemy);
+		enemy.getSprite().draw(game.batch);
 
 		// -------- DRAW HEALTHBAR --------
-		drawEntity(bar);
+		bar.getSprite().draw(game.batch);
 
 		// -------- DRAW WALLS --------
 		for (Wall wall : walls) {
-			drawEntity(wall);
+			wall.getSprite().draw(game.batch);
 		}
 
 		game.batch.end();
 
-		 
-		if (Utilites.CollisonCheck(playerSprite, enemySprite)) {
-			System.out.println(player.getHealth());
-			enemy.attackPlayer(player, Gdx.graphics.getDeltaTime());
+		polyBatch.begin();
+		polyBatch.setProjectionMatrix(camera.combined);
+
+		// -------- CHECK FOR ENEMY ATTACKS --------
+		Polygon attackTri = enemy.attack(player);
+
+		float[] vertices = new float[] {player.getSprite().getX(), player.getSprite().getY(),
+				player.getSprite().getX() + player.getSprite().getWidth(),
+				player.getSprite().getY(), player.getSprite().getX(),
+				player.getSprite().getX() + player.getSprite().getWidth(),
+				player.getSprite().getY() + player.getSprite().getHeight(),
+				player.getSprite().getY() + player.getSprite().getHeight()
+				};
+
+		Polygon rPoly = new Polygon(vertices);
+
+		polyBatch.draw(
+				new PolygonRegion(new TextureRegion(healthImage), rPoly.getTransformedVertices(),
+				new EarClippingTriangulator().computeTriangles(vertices).toArray()),
+				player.getSprite().getScaleX(), player.getSprite().getScaleY());
+
+		if (Utilities.isCollision(attackTri, player.getSprite())) {
+			player.removeHealth((int) (enemy.getAttack() * delta));
 			bar.reduceHealth(player);
+			polyBatch.draw(
+					new PolygonRegion(new TextureRegion(healthImage),
+							attackTri.getTransformedVertices(), new short[] {0, 1, 2}),
+					enemy.getSprite().getScaleX(), enemy.getSprite().getScaleY());
 		}
-		
+
+		polyBatch.end();
 
 		// -------- USER INPUT (KEYBOARD) --------
-		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-			lastPlayerX = playerSprite.getX();
-			playerSprite.translateX(-1 * 24 * Gdx.graphics.getDeltaTime());
-			// Make sure character can't leave edge of screen
-			if (playerSprite.getX() < 0) {
-				playerSprite.setX(0);
-			}
-			for (int i = 0; i < walls.size(); i++) {
-				if (Utilites.CollisonCheck(playerSprite.getBoundingRectangle(),
-						walls.get(i).getWall().getBoundingRectangle())) {
-					playerSprite.setX(lastPlayerX);
-				}
-			}
-
-		}
-		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			lastPlayerX = playerSprite.getX();
-			playerSprite.translateX(24 * Gdx.graphics.getDeltaTime());
-
-			// Make sure character can't leave edge of screen
-			if (playerSprite.getY() > Gdx.graphics.getWidth() - playerSprite.getWidth()) {
-				playerSprite.setX(Gdx.graphics.getWidth() - playerSprite.getWidth());
-			}
-			for (int i = 0; i < walls.size(); i++) {
-				if (Utilites.CollisonCheck(playerSprite.getBoundingRectangle(),
-						walls.get(i).getWall().getBoundingRectangle())) {
-					playerSprite.setX(lastPlayerX);
-				}
-			}
-		}
-		if (Gdx.input.isKeyPressed(Keys.UP)) {
-			lastPlayerY = playerSprite.getY();
-			// Make sure character can't leave edge of screen
-			if (playerSprite.getY() > Gdx.graphics.getHeight() - playerSprite.getHeight()) {
-				playerSprite.setY(Gdx.graphics.getHeight() - playerSprite.getHeight());
-			}
-			// Make sure wall can't be passed
-			playerSprite.translateY(24 * Gdx.graphics.getDeltaTime());
-			for (int i = 0; i < walls.size(); i++) {
-				if (Utilites.CollisonCheck(playerSprite.getBoundingRectangle(),
-						walls.get(i).getWall().getBoundingRectangle())) {
-					playerSprite.setY(lastPlayerY);
-				}
-			}
-		}
-		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-			lastPlayerY = playerSprite.getY();
-			playerSprite.translateY(-1 * 24 * Gdx.graphics.getDeltaTime());
-			// Make sure character can't leave edge of screen
-			if (playerSprite.getY() < 0) {
-				playerSprite.setY(0);
-			}
-			// Make sure wall can't be passed
-			for (int i = 0; i < walls.size(); i++) {
-				if (Utilites.CollisonCheck(playerSprite.getBoundingRectangle(),
-						walls.get(i).getWall().getBoundingRectangle())) {
-					playerSprite.setY(lastPlayerY);
-				}
-			}
-		}
+		listen();
 
 	}
 
 	@Override
-	public void resize(int width, int height) {}
+	public void resize(int width, int height) {
+
+	}
 
 	@Override
 	public void show() {
@@ -221,10 +208,96 @@ public class GameScreen implements Screen {
 
 	}
 
-	public void drawEntity(Entity entity) {
-		Sprite entitySprite = entity.getSprite();
-		game.batch.draw(entitySprite, entitySprite.getX(), entitySprite.getY(),
-				entitySprite.getWidth(), entitySprite.getHeight());
+	private void listen() {
+
+		Sprite playerSprite = player.getSprite();
+		boundaryFlag = false;
+
+		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+
+			controls.moveLeft();
+
+			// Make sure character can't leave edge of screen
+			if (playerSprite.getX() < 0) {
+				boundaryFlag = true;
+				controls.moveRight();
+			}
+			for (int i = 0; i < walls.size(); i++) {
+				if (boundaryFlag == true) {
+					break;
+				}
+
+				if (Utilities.CollisonCheck(playerSprite, walls.get(i).getWall())) {
+					controls.moveRight();
+					break;
+				}
+			}
+		}
+
+		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+			controls.moveRight();
+
+			// Make sure character can't leave edge of screen
+			if (playerSprite.getY() > WORLD_WIDTH - playerSprite.getWidth()) {
+				boundaryFlag = true;
+				controls.moveLeft();
+
+			}
+			for (int i = 0; i < walls.size(); i++) {
+				if (boundaryFlag == true) {
+					break;
+				}
+
+				if (Utilities.CollisonCheck(playerSprite, walls.get(i).getWall())) {
+					controls.moveLeft();
+					break;
+				}
+			}
+		}
+
+		if (Gdx.input.isKeyPressed(Keys.UP)) {
+			// Make sure character can't leave edge of screen
+			controls.moveUp();
+
+			if (playerSprite.getY() > WORLD_HEIGHT - playerSprite.getHeight()) {
+				boundaryFlag = true;
+				controls.moveDown();
+			}
+
+			// Make sure wall can't be passed
+			for (int i = 0; i < walls.size(); i++) {
+				if (boundaryFlag == true) {
+					break;
+				}
+
+				if (Utilities.CollisonCheck(playerSprite, walls.get(i).getWall())) {
+					controls.moveDown();
+					break;
+				}
+			}
+		}
+
+		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+
+			controls.moveDown();
+
+			// Make sure character can't leave edge of screen
+			if (playerSprite.getY() < 0) {
+				boundaryFlag = true;
+				controls.moveUp();
+			}
+
+			// Make sure wall can't be passed
+			for (int i = 0; i < walls.size(); i++) {
+				if (boundaryFlag == true) {
+					break;
+				}
+				if (Utilities.CollisonCheck(playerSprite, walls.get(i).getWall())) {
+					controls.moveUp();
+				}
+			}
+		}
 	}
+
 
 }

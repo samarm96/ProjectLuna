@@ -10,11 +10,12 @@ public class Player extends Character {
         super(image, initialLocation, dimensions, maxHealth);
     }
 
-    public void setHealthBar(HealthBar healthBar){
+    public void setHealthBar(HealthBar healthBar) {
         this.healthBar = healthBar;
     }
 
-    public HealthBar getHealthBar(){
+    public HealthBar getHealthBar() {
         return this.healthBar;
     }
+
 }
