@@ -151,13 +151,16 @@ public class GameScreen implements Screen {
 
 		// -------- CHECK FOR ENEMY ATTACKS --------
 		Polygon attackTri = enemy.attack(player);
+		Sprite playerSprite = player.getSprite();
 
-		float[] vertices = new float[] {player.getSprite().getX(), player.getSprite().getY(),
-				player.getSprite().getX() + player.getSprite().getWidth(),
-				player.getSprite().getY(), player.getSprite().getX(),
-				player.getSprite().getX() + player.getSprite().getWidth(),
-				player.getSprite().getY() + player.getSprite().getHeight(),
-				player.getSprite().getY() + player.getSprite().getHeight()
+
+		float[] vertices = new float[] {
+			
+			playerSprite.getX(), 								playerSprite.getY(),
+			playerSprite.getX() + playerSprite.getWidth(), 		playerSprite.getY(), 
+			playerSprite.getX() + playerSprite.getWidth(), 		playerSprite.getY() + playerSprite.getHeight(),
+			playerSprite.getX(),								playerSprite.getY() + playerSprite.getHeight()
+			
 				};
 
 		Polygon rPoly = new Polygon(vertices);
