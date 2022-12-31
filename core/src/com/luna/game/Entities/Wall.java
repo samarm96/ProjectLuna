@@ -8,7 +8,6 @@ public class Wall extends Entity {
 
     public Wall(Texture image, float[] initialLocation, float[] dimensions) {
         super(image, initialLocation, dimensions);
-        // TODO Auto-generated constructor stub
     }
 
     public Sprite getWall() {

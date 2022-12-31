@@ -7,27 +7,26 @@ import com.luna.game.Engine.Utilities;
 public class HealthBar extends Entity {
 
     private float originalHealthBarWidth;
-	
+	private float healthBarBuffer;
 
     public HealthBar(Texture image, float[] initialLocation, float[] initialDimensions,
-            int health) {
+            int health, float healthBarBuffer) {
         super(image, initialLocation, initialDimensions);
-
+        
+        this.healthBarBuffer = healthBarBuffer;
         this.setSprite(RenderHealthBar(health));
         this.getSprite().setTexture(image);
         this.originalHealthBarWidth = this.getSprite().getWidth();
     }
 
-    public static Sprite RenderHealthBar(int health) {
+    public Sprite RenderHealthBar(int health) {
         int maxHealth = 100;
 
         final int WORLD_HEIGHT = Utilities.WORLD_HEIGHT;
         final int WORLD_WIDTH = Utilities.WORLD_WIDTH;
 
-        float healthBarBuffer = 5;
-
-        float xLocation = WORLD_WIDTH - WORLD_WIDTH / 4 + healthBarBuffer;
-        float yLocation = WORLD_HEIGHT / 2;
+        float xLocation = this.getLocation()[0] + healthBarBuffer; 
+        float yLocation = this.getLocation()[0]; 
         float height = WORLD_HEIGHT/20;
 
         float width = (health / maxHealth) * WORLD_WIDTH / 4 - healthBarBuffer*2;
@@ -44,10 +43,10 @@ public class HealthBar extends Entity {
 
 
 
-    public void reduceHealth(final Player player) {
+    public void reduceHealth(final Character character) {
 
-        int health = player.getHealth();
-        int maxHealth = player.getMaxHealth();
+        int health = character.getHealth();
+        int maxHealth = character.getMaxHealth();
         Sprite sprite = this.getSprite();
 
         if ((originalHealthBarWidth - (originalHealthBarWidth
@@ -61,7 +60,7 @@ public class HealthBar extends Entity {
                             - ((float) health / maxHealth) * originalHealthBarWidth),
                     sprite.getHeight());
 
-            System.out.println("Health: " + player.getHealth());
+            System.out.println("Health: " + character.getHealth());
         }
     }
 
