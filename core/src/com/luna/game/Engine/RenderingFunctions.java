@@ -13,7 +13,18 @@ import com.luna.game.Entities.Wall;
 
 public class RenderingFunctions {
 
-
+    /**
+     * Renders a line of sprites from an x y coordinate
+     * @param texture the texture to render each individual block with
+     * @param x the x coordinate to start at
+     * @param y the y coordinate to start at
+     * @param width the width of each sprite
+     * @param height the height of each sprite
+     * @param number the number of sprites to render
+     * @param verticalFlag a flag indicating whether the line should be rendered vertically or horizontal. Defaults to rendering up
+     * @param downLeft a flag indicating whether the line should be rendered to the left or down
+     * @returns a list containing each sprite to be rednered
+     */
     public static List<Wall> RenderWallLine(Texture texture, float x, float y, float width,
             float height, int number, boolean verticalFlag, boolean downLeft) {
         List<Wall> walls = new ArrayList<>();
@@ -21,6 +32,7 @@ public class RenderingFunctions {
         final int worldHeight = Utilities.WORLD_HEIGHT;
         final int worldWidth = Utilities.WORLD_WIDTH;
 
+        // Checks to ensure that the wall is within bounds
         if (y - height * number > worldHeight - y && verticalFlag == true
                 && downLeft == true) {
             System.out.println("Cannot create walls, desired size is larger than screen size.");
@@ -90,6 +102,13 @@ public class RenderingFunctions {
         return walls;
     }
 
+    /**
+     * Uses the render square from corner function to render walls across the boundary of the screen
+     * @param texture the texture to render each individual block with
+     * @param wallWidth the width of each individual sprite
+     * @param wallHeight the height of each individual sprite
+     * @returns a list containing each sprite to be rednered
+     */
     public static List<Wall> RenderBoundaryWalls(Texture texture, float wallWidth,
             float wallHeight) {
         List<Wall> boundaryWalls = new ArrayList<>();
@@ -103,6 +122,18 @@ public class RenderingFunctions {
         return boundaryWalls;
     }
 
+     /**
+     * Uses the render sprite line function to render a square. 
+     * @param texture the texture to render each individual block with
+     * @param wallWidth the width of each individual sprite
+     * @param wallHeight the height of each individual sprite
+     * @param cornerX the x coordinate of the corner where the square is rendered from
+     * @param cornerY the y coordinate of the corner where the square is rendered from
+     * @param squareHeight the height of the overall square
+     * @param squareWidth the width of the overall square
+     * 
+     * @returns a list containing each sprite to be rednered
+     */
     public static List<Wall> RenderSquareFromCorner(Texture texture, float wallWidth,
             float wallHeight, float cornerX, float cornerY, float squareHeight, float squareWidth) {
         List<Wall> boundaryWalls = new ArrayList<>();
@@ -134,6 +165,22 @@ public class RenderingFunctions {
         return boundaryWalls;
     }
 
+    /**
+     * Creates a polygon object in the shape of a triangle at the front of a sprite
+     * 
+     *                  3
+     *                  -
+     *       height     - b
+     * 1 ---------------- a
+     *                  - s
+     *                  - e
+     *                  2 
+     * 
+     * @param sprite the sprite that the triangle will be created in front of
+     * @param height the height of the triangle
+     * @param baseLength the length of the triangle
+     * @returns a polygon representing the triangle
+     */
     public static Polygon CreateTriangle(Sprite sprite, float height, float baseLength) {
 
         Rectangle charRectangle = sprite.getBoundingRectangle();
@@ -151,6 +198,12 @@ public class RenderingFunctions {
         return new Polygon(vertices);
     }
 
+    /**
+     * Utility array that concatenates two arrays of the same type
+     * @param array1 the first array 
+     * @param array2 the second array
+     * @returns a concatenated array of the input type
+     */
     static <T> T concatArray(T array1, T array2) {
         if (!array1.getClass().isArray() || !array2.getClass().isArray()) {
             throw new IllegalArgumentException("Only arrays are accepted.");

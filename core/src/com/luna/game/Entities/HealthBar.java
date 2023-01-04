@@ -9,6 +9,14 @@ public class HealthBar extends Entity {
     private float originalHealthBarWidth;
 	private float healthBarBuffer;
 
+    /**
+     * 
+     * @param image
+     * @param initialLocation
+     * @param initialDimensions
+     * @param health
+     * @param healthBarBuffer
+     */
     public HealthBar(Texture image, float[] initialLocation, float[] initialDimensions,
             int health, float healthBarBuffer) {
         super(image, initialLocation, initialDimensions);
@@ -18,7 +26,11 @@ public class HealthBar extends Entity {
         this.getSprite().setTexture(image);
         this.originalHealthBarWidth = this.getSprite().getWidth();
     }
-
+    /**
+     * 
+     * @param health
+     * @return
+     */
     public Sprite RenderHealthBar(int health) {
         int maxHealth = 100;
 
