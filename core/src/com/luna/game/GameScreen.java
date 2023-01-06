@@ -1,5 +1,6 @@
 package com.luna.game;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
@@ -14,8 +15,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.EarClippingTriangulator;
 import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Vector2;
 import com.luna.game.Engine.EnemyControls;
+import com.luna.game.Engine.Loader;
 import com.luna.game.Engine.PlayerControls;
 import com.luna.game.Engine.RenderingFunctions;
 import com.luna.game.Engine.Utilities;
@@ -36,9 +37,6 @@ public class GameScreen implements Screen {
 
 	private OrthographicCamera camera;
 
-	HealthBar bar;
-	HealthBar enemyBar;
-
 	Sprite backgroundSprite;
 
 	Polygon attackTriangle;
@@ -49,88 +47,56 @@ public class GameScreen implements Screen {
 	private Player player;
 	private PlayerControls controls;
 	private boolean playerAttackFlag = false;
-	private int playerMaxHealth;
 
-
-
+	int mapNo;
 	private boolean boundaryFlag;
 
 	private HostileNpc enemy;
-	private int enemyHealth;
 	private EnemyControls enemyControls;
 
-	private Texture playerSpriteTexture;
 	private Texture wallImage;
 	private Texture healthImage;
-	private Texture demonImage;
 
 	private Wall wall;
 	private List<Wall> walls;
-
+	private List<HealthBar> healthBars = new ArrayList<>();
 	float originalHealthBarWidth;
 
 	public GameScreen(final ProjectLuna game) {
 		this.game = game;
+		Loader loader = new Loader();
 
 		backgroundSprite = new Sprite(new Texture("../assets/black.jpg"));
 		backgroundSprite.setPosition(0, 0);
 		backgroundSprite.setSize(WORLD_WIDTH, WORLD_HEIGHT);
 
-		playerSpriteTexture = new Texture("../assets/kirby.jpg");
 		wallImage = new Texture("../assets/wall.jpg");
 		healthImage = new Texture("../assets/red.png");
-		demonImage = new Texture("../assets/demon.png");
 
 
 		// -------- CREATE CAMERA --------
-		camera = new OrthographicCamera(WORLD_WIDTH, WORLD_HEIGHT);
-		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
-		camera.update();
+		camera = loader.loadCamera();
 
 		// -------- REPRESENT PLAYER AS A SPRITE --------
-		// Sets the initial location of the character
-		float[] location = new float[] {WORLD_WIDTH / 4, WORLD_HEIGHT / 4};
-
-		// Set width/height of player character
-		float[] playerDimensions = new float[] {WORLD_WIDTH / 20, WORLD_HEIGHT / 20};
-		playerMaxHealth = 100;
-		player = new Player(playerSpriteTexture, location, playerDimensions, playerMaxHealth);
-		player.setAttack(100);
+		player = loader.loadPlayer();
 		controls = new PlayerControls(player);
-
-
 		//  Represent player healthbar
-		float healthBarBuffer = 5;
-		float[] healthBarLocation = new float[] {(float) WORLD_WIDTH - WORLD_WIDTH / 4, WORLD_HEIGHT / 2};
-
-		bar = new HealthBar(healthImage, healthBarLocation, new float[] {0, 0}, player.getHealth(), healthBarBuffer);
+		healthBars.add(new HealthBar(healthImage, player));
+		player.setHealthBar(healthBars.get(0));
 
 		// -------- CREATE ENEMY --------
-		float[] demonLocation = new float[] {WORLD_WIDTH / 4, WORLD_HEIGHT / 2};
-		float[] enemyDimensions = new float[] {WORLD_WIDTH / 20, WORLD_HEIGHT / 20};
-		enemyHealth = 100;
-		enemy = new HostileNpc(demonImage, demonLocation, enemyDimensions, enemyHealth);
-		enemy.setAttack(100);
-
+		enemy = loader.loadDemon();
 		enemyControls = new EnemyControls(enemy);
-
-		//  Represent enemy healthbar
-		Vector2 loc = new Vector2();
-		enemy.getSprite().getBoundingRectangle().getCenter(loc);
-		float[] enemyHealthBarLocation = new float[] {loc.x, loc.y + enemy.getSprite().getHeight()/2 };
-
-		enemyBar = new HealthBar(healthImage, enemyHealthBarLocation, new float[] {0, 0}, enemy.getHealth(), 0);
-
+		healthBars.add(new HealthBar(healthImage, enemy));
+		enemy.setHealthBar(healthBars.get(1));
 
 		// -------- REPRESENT WALLS AS SPRITES --------
 		float wallDimensions[] = new float[] {WORLD_WIDTH / 20, WORLD_HEIGHT / 20};
 		float wallInitialLocation[] = new float[] {0, 0};
 		wall = new Wall(wallImage, wallInitialLocation, wallDimensions);
 
-		walls = RenderingFunctions.RenderSquareFromCorner(wallImage, wall.getSprite().getWidth(),
-				wall.getSprite().getHeight(), (float) 0, (float) 0, WORLD_HEIGHT,
-				WORLD_WIDTH - WORLD_WIDTH / 4);
-
+		// Render Map 1
+		mapNo = 1;
 
 		// -------- USED TO RENDER POLYGONS --------
 		polyBatch = new PolygonSpriteBatch();
@@ -151,6 +117,7 @@ public class GameScreen implements Screen {
 
 		backgroundSprite.draw(game.batch);
 
+		
 		// -------- DRAW PLAYER CHARACTER
 		player.getSprite().draw(game.batch);
 
@@ -158,10 +125,17 @@ public class GameScreen implements Screen {
 		enemy.getSprite().draw(game.batch);
 
 		// -------- DRAW HEALTHBAR --------
-		bar.getSprite().draw(game.batch);
-		enemyBar.getSprite().draw(game.batch);
+		for(HealthBar bar : healthBars){
+			bar.draw(game.batch);
+		}
 
 		// -------- DRAW WALLS --------
+		if(mapNo == 1){
+			walls = RenderingFunctions.RenderSquareFromCorner(wallImage, wall.getSprite().getWidth(),
+				wall.getSprite().getHeight(), (float) 0, (float) 0, WORLD_HEIGHT,
+				WORLD_WIDTH - WORLD_WIDTH / 4);
+		}
+
 		for (Wall wall : walls) {
 			wall.getSprite().draw(game.batch);
 		}
@@ -174,28 +148,9 @@ public class GameScreen implements Screen {
 		// -------- CHECK FOR ENEMY ATTACKS --------
 		Polygon enemyAttackTriangle = enemyControls.attack();
 
-		// Sprite playerSprite = player.getSprite();
-
-		/**
-		 * float[] vertices = new float[] {
-		 * 
-		 * playerSprite.getX(), playerSprite.getY(), playerSprite.getX() + playerSprite.getWidth(),
-		 * playerSprite.getY(), playerSprite.getX() + playerSprite.getWidth(), playerSprite.getY() +
-		 * playerSprite.getHeight(), playerSprite.getX(), playerSprite.getY() +
-		 * playerSprite.getHeight()
-		 * 
-		 * };
-		 * 
-		 * Polygon rPoly = new Polygon(vertices);
-		 * 
-		 * polyBatch.draw( new PolygonRegion(new TextureRegion(healthImage), rPoly.getVertices(),
-		 * new EarClippingTriangulator().computeTriangles(vertices).toArray()),
-		 * player.getSprite().getScaleX(), player.getSprite().getScaleY());
-		 */
-
 		if (Utilities.isCollision(enemyAttackTriangle, player.getSprite())) {
 			player.removeHealth((int) (enemy.getAttack() * delta));
-			bar.reduceHealth(player);
+			player.getHealthBar().reduceHealth(player);
 			drawPolygon(healthImage, enemyAttackTriangle, enemy);
 		}
 
@@ -206,11 +161,12 @@ public class GameScreen implements Screen {
 
 			if (Utilities.isCollision(playerAttackTriangle, enemy.getSprite())) {
 				enemy.removeHealth((int) (player.getAttack() * delta));
-				enemyBar.reduceHealth(enemy);	
+				enemy.getHealthBar().reduceHealth(enemy);	
 			}
 
 			playerAttackFlag = false;
 		}
+
 		polyBatch.end();
 
 		// -------- USER INPUT (KEYBOARD) --------
@@ -273,7 +229,7 @@ public class GameScreen implements Screen {
 					break;
 				}
 
-				if (Utilities.CollisonCheck(playerSprite, walls.get(i).getWall())) {
+				if (Utilities.CollisonCheck(playerSprite, walls.get(i).getSprite())) {
 					controls.moveRight();
 					break;
 				}
@@ -294,7 +250,7 @@ public class GameScreen implements Screen {
 					break;
 				}
 
-				if (Utilities.CollisonCheck(playerSprite, walls.get(i).getWall())) {
+				if (Utilities.CollisonCheck(playerSprite, walls.get(i).getSprite())) {
 					controls.moveLeft();
 					break;
 				}
@@ -316,7 +272,7 @@ public class GameScreen implements Screen {
 					break;
 				}
 
-				if (Utilities.CollisonCheck(playerSprite, walls.get(i).getWall())) {
+				if (Utilities.CollisonCheck(playerSprite, walls.get(i).getSprite())) {
 					controls.moveDown();
 					break;
 				}
@@ -338,7 +294,7 @@ public class GameScreen implements Screen {
 				if (boundaryFlag == true) {
 					break;
 				}
-				if (Utilities.CollisonCheck(playerSprite, walls.get(i).getWall())) {
+				if (Utilities.CollisonCheck(playerSprite, walls.get(i).getSprite())) {
 					controls.moveUp();
 				}
 			}
