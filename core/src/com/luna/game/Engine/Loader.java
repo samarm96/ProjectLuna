@@ -1,7 +1,7 @@
 package com.luna.game.Engine;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.luna.game.Entities.HostileNpc;
+import com.luna.game.Entities.Enemy;
 import com.luna.game.Entities.Player;
 
 public class Loader {
@@ -19,7 +19,7 @@ public class Loader {
         return DataUtilities.loadPlayer();
     }
 
-    public HostileNpc loadDemon(){
+    public Enemy loadDemon(){
         return DataUtilities.loadEnemies("Demon");
     }
 

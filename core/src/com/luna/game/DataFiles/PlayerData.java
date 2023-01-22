@@ -1,6 +1,9 @@
 package com.luna.game.DataFiles;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.luna.game.Components.Attributes;
+import com.luna.game.Components.Health;
+import com.luna.game.Components.SpriteComp;
 import com.luna.game.Entities.Player;
 
 public class PlayerData {
@@ -55,9 +58,14 @@ public class PlayerData {
     }
 
     public Player createPlayer(){
-        Player p = new Player(new Texture(this.imagePath), this.initialLocation, this.dimensions, this.maxHealth);
-        p.setAttack(attack);
-        
+        Player p = new Player();
+        SpriteComp spriteComponent = new SpriteComp(new Texture(this.imagePath), this.initialLocation, this.dimensions);
+        Health health = new Health(maxHealth, maxHealth);
+        Attributes attributes = new Attributes((int) this.attack);
+        p.addComponent(spriteComponent);    
+        p.addComponent(health);        
+        p.addComponent(attributes);        
+    
         return p;
     }
 }

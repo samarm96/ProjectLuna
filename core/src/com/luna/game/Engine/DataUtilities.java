@@ -9,8 +9,9 @@ import java.util.stream.Collectors;
 import com.badlogic.gdx.utils.Json;
 import com.luna.game.DataFiles.EnemyData;
 import com.luna.game.DataFiles.PlayerData;
-import com.luna.game.Entities.HostileNpc;
+import com.luna.game.Entities.Enemy;
 import com.luna.game.Entities.Player;
+
 
 public class DataUtilities {
 
@@ -60,7 +61,7 @@ public class DataUtilities {
      * @param name
      * @return
      */
-    public static HostileNpc loadEnemies(String name) {
+    public static Enemy loadEnemies(String name) {
         String filepath = "../core/src/com/luna/game/DataFiles/" + name + ".json";
         Json json = new Json();
         String x = "";

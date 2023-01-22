@@ -3,13 +3,20 @@ package com.luna.game.Entities;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.luna.game.Components.Component;
+import com.luna.game.Components.Health;
 import com.luna.game.Engine.Utilities;
+import com.luna.game.Components.SpriteComp;
 
-public class HealthBar extends Entity {
+public class HealthBar extends Component {
 
     private float originalHealthBarWidth;
 	private float healthBarBuffer;
-    private Character character;
+    private Entity character;
+    private Sprite characterSprite;
+    private Health characterHealth;
+    private Sprite healthBarSprite;
+
     /**
      * 
      * @param image
@@ -18,14 +25,27 @@ public class HealthBar extends Entity {
      * @param health
      * @param healthBarBuffer
      */
-    public HealthBar(Texture image, Character character) {
-        super(image, character.getLocation(), new float[] {0, 0});
+    public HealthBar(Texture image, Entity character) {
+        
         
         this.character = character;
+
+        this.characterSprite = ((SpriteComp) this.character.getComponent("Sprite").get()).getSprite();
+
+        characterHealth = ((Health) this.character.getComponent("Health").get());
+
         this.healthBarBuffer = 0;
-        this.setSprite(RenderHealthBar(this.character.getHealth()));
+        this.setSprite(RenderHealthBar());
         this.getSprite().setTexture(image);
         this.originalHealthBarWidth = this.getSprite().getWidth();
+    }
+
+    public void setSprite(Sprite sprite){
+        this.healthBarSprite = sprite;
+    }
+
+    public Sprite getSprite(){
+        return this.healthBarSprite;
     }
 
     /**
@@ -33,16 +53,18 @@ public class HealthBar extends Entity {
      * @param health
      * @return
      */
-    public Sprite RenderHealthBar(int health) {
-        int maxHealth = this.character.getMaxHealth();
+    public Sprite RenderHealthBar() {
 
+        
+        int maxHealth = this.characterHealth.getMaxHealth();
+        
         final int WORLD_HEIGHT = Utilities.WORLD_HEIGHT;
 
-        float xLocation = this.getLocation()[0] + healthBarBuffer; 
-        float yLocation = this.getLocation()[1] + this.character.getSprite().getHeight(); 
+        float xLocation = this.characterSprite.getX() + healthBarBuffer; 
+        float yLocation = this.characterSprite.getY() + this.characterSprite.getHeight(); 
         float height = WORLD_HEIGHT/40;
 
-        float width = (health / maxHealth) * this.character.getDimensions()[0] - healthBarBuffer*2;
+        float width = (this.characterHealth.getHealth() / maxHealth) * this.characterSprite.getWidth() - healthBarBuffer*2;
         if (width < 0) {
             width = 0;
         }
@@ -58,7 +80,7 @@ public class HealthBar extends Entity {
      * Set to keep the bar above the character
      */
     public void updateLocation(){
-        this.getSprite().setPosition(character.getSprite().getX(), character.getSprite().getY()+ character.getDimensions()[1]);
+        this.getSprite().setPosition(this.characterSprite.getX(), this.characterSprite.getY()+ this.characterSprite.getHeight());
     }
 
     public void draw(SpriteBatch batch){
@@ -67,10 +89,10 @@ public class HealthBar extends Entity {
         
     }
 
-    public void reduceHealth(final Character character) {
+    public void reduceHealth() {
 
-        int health = character.getHealth();
-        int maxHealth = character.getMaxHealth();
+        int health = this.characterHealth.getHealth();
+        int maxHealth =  this.characterHealth.getMaxHealth();
         Sprite sprite = this.getSprite();
 
         if ((originalHealthBarWidth - (originalHealthBarWidth
@@ -84,10 +106,12 @@ public class HealthBar extends Entity {
                             - ((float) health / maxHealth) * originalHealthBarWidth),
                     sprite.getHeight());
 
-            System.out.println("Health: " + character.getHealth());
+            System.out.println("Health: " +  this.characterHealth.getHealth());
         }
     }
 
 
 
 }
+
+

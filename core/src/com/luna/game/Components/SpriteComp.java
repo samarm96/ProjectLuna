@@ -16,4 +16,6 @@ public class SpriteComp extends Component {
     public Sprite getSprite(){
         return this.sprite;
     }
+
+
 }

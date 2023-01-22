@@ -2,7 +2,7 @@ package com.luna.game.Engine;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.luna.game.Entities.HostileNpc;
+import com.luna.game.Entities.Enemy;
 
 public class MapGeneration {
     
@@ -10,8 +10,8 @@ public class MapGeneration {
 
     }
 
-    public List<HostileNpc> spawnEnemies(String name, int number){
-        List<HostileNpc> enemies = new ArrayList<>();
+    public List<Enemy> spawnEnemies(String name, int number){
+        List<Enemy> enemies = new ArrayList<>();
 
         for(int i = 0;i<number;i++){
             enemies.add(DataUtilities.loadEnemies(name));

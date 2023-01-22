@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.luna.game.Components.SpriteComp;
 import com.luna.game.Entities.Wall;
 
 public class RenderingFunctions {
@@ -74,25 +75,34 @@ public class RenderingFunctions {
             }
         }
 
-        Wall wall;
         float[] dimensions = new float[] {width, height};
         for (int i = 0; i < number; i++) {
-            wall = new Wall(texture, new float[]{0,0}, dimensions);
+            
+            Wall wall = new Wall();
+            SpriteComp spriteComp = new SpriteComp(texture, new float[]{0,0}, dimensions);
+
             if (verticalFlag == true) {
                 if (downLeft == true) {
-                    wall.setLocation(x, y - height * i);
+                    spriteComp.getSprite().setPosition(x, y - height * i);
+                    wall.addComponent(spriteComp);
                     walls.add(wall);
+
                 } else {
-                    wall.setLocation(x, y + height * i);
+                    spriteComp.getSprite().setPosition(x, y + height * i);
+                    wall.addComponent(spriteComp);
                     walls.add(wall);
+
                 }
             }
             if (verticalFlag == false) {
                 if (downLeft == true) {
-                    wall.setLocation(x - width * i, y);
+                    spriteComp.getSprite().setPosition(x - width * i, y);
+                    wall.addComponent(spriteComp);
                     walls.add(wall);
+
                 } else {
-                    wall.setLocation(x + width * i, y);
+                    spriteComp.getSprite().setPosition(x + width * i, y);
+                    wall.addComponent(spriteComp);
                     walls.add(wall);
                 }
             }
@@ -136,14 +146,18 @@ public class RenderingFunctions {
      */
     public static List<Wall> RenderSquareFromCorner(Texture texture, float wallWidth,
             float wallHeight, float cornerX, float cornerY, float squareHeight, float squareWidth) {
+
         List<Wall> boundaryWalls = new ArrayList<>();
 
         List<Wall> topWalls = RenderWallLine(texture, cornerX, cornerY + squareHeight - wallHeight,
                 wallWidth, wallHeight, Math.round(squareWidth / wallWidth), false, false);
+
         List<Wall> bottomWalls = RenderWallLine(texture, cornerX, cornerY, wallWidth, wallHeight,
                 Math.round(squareWidth / wallWidth), false, false);
+
         List<Wall> leftWalls = RenderWallLine(texture, cornerX, cornerY + wallHeight, wallWidth,
                 wallHeight, Math.round((squareHeight - wallHeight) / wallHeight)-1, true, false);
+
         List<Wall> rightWalls = RenderWallLine(texture, cornerX + squareWidth - wallWidth,
                 cornerY + wallHeight, wallWidth, wallHeight,
                 Math.round((squareHeight - wallHeight) / wallHeight)-1, true, false);

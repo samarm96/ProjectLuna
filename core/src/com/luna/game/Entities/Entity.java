@@ -1,106 +1,144 @@
 package com.luna.game.Entities;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import java.util.Optional;
+
 import com.badlogic.gdx.utils.Array;
+import com.luna.game.Components.Attributes;
+import com.luna.game.Components.Collision;
 import com.luna.game.Components.Component;
+import com.luna.game.Components.Health;
+import com.luna.game.Components.Position;
+import com.luna.game.Components.SpriteComp;
 
 public class Entity {
+    private Array<Component> components;
 
-    private Sprite sprite;
-    private Array<Component> components; 
-    
-    public Entity(Texture image, float[] initialLocation, float[] initialDimensions) {
-
+    public Entity() {
         this.components = new Array<Component>();
-        this.sprite = new Sprite(image);
-        this.sprite.setX(initialLocation[0]);
-        this.sprite.setY(initialLocation[1]);
+    }
 
-        // Set width/height of player character
-        this.sprite.setSize(initialDimensions[0], initialDimensions[1]);
+    public void addComponent(Component component) {
+        components.add(component);
+    }
+
+    public void removeComponent(String s) {
+        int num = 0;
+
+        // Assign a number based on the component provided
+        switch (s) {
+            case "Position":
+                num = 1;
+                for (int i = 0; i < components.size; i++) {
+                    if (components.get(i).getComponentNo() == num) {
+                        components.removeIndex(i);
+                    }
+                }
+            case "Sprite":
+                num = 2;
+                for (int i = 0; i < components.size; i++) {
+                    if (components.get(i).getComponentNo() == num) {
+                        components.removeIndex(i);
+                    }
+                }
+            case "Health":
+                num = 3;
+                for (int i = 0; i < components.size; i++) {
+                    if (components.get(i).getComponentNo() == num) {
+                        components.removeIndex(i);
+                    }
+                }
+            case "Collision":
+                num = 4;
+                for (int i = 0; i < components.size; i++) {
+                    if (components.get(i).getComponentNo() == num) {
+                        components.removeIndex(i);
+                    }
+                }
+            case "Attributes":
+                num = 5;
+                for (int i = 0; i < components.size; i++) {
+                    if (components.get(i).getComponentNo() == num) {
+                        components.removeIndex(i);
+                    }
+                }
+        }
+        // TODO: Need to add exception here if the wrong input was given
+        if (num == 0) {
+
+        }
+
+
 
     }
 
-    public void addComponent(Component c){
-        components.add(c);
-    }
-    
-    public void removeComponent(Component c){
-    }
-    /**
-     * Setter for the player's sprite parameter.
-     */
-    public Sprite getSprite() {
-        return this.sprite;
-    }
+    public Optional<Component> getComponent(String s) {
+        int num = 0;
+        //
+        // Assign a number based on the component provided
+        switch (s) {
+            case "Position":
+                num = 1;
+                for (Component component : components) {
+                    if (component.getComponentNo() == num) {
+                        return Optional.of(component);
+                    }
+                }
+            case "Sprite":
+                num = 2;
+                for (Component component : components) {
+                    if (component.getComponentNo() == num) {
+                        return Optional.of(component);
+                    }
+                }
+            case "Health":
+                num = 3;
+                for (Component component : components) {
+                    if (component.getComponentNo() == num) {
+                        return Optional.of(component);
+                    }
+                }
+            case "Collision":
+                num = 4;
+                for (Component component : components) {
+                    if (component.getComponentNo() == num) {
+                        return Optional.of(component);
+                    }
+                }
+            case "Attributes":
+                num = 5;
+                for (Component component : components) {
+                    if (component.getComponentNo() == num) {
+                        return Optional.of(component);
+                    }
+                }
+        }
 
-    /**
-     * Getter for the player's sprite parameter.
-     */
-    public void setSprite(Sprite sprite) {
-        this.sprite = sprite;
-    }
+        // TODO: Need to add exception here if the wrong input was given
+        if (num == 0) {
+            return Optional.empty();
+        }
 
-    /**
-     * Setter for the sprite's dimensions. Dimensions are represented as a 2 element float array.
-     * Element 0 - width [pixels] Element 1 - height [pixels]
-     * 
-     * @param dimensions - float array containing the dimensions
-     */
-    public void setDimensions(float[] dimensions) {
-        this.sprite.setSize(dimensions[0], dimensions[1]);
-    }
-
-    /**
-     * Getter for the sprite's dimensions. Dimensions are represented as a 2 element float array.
-     * Element 0 - width [pixels] Element 1 - height [pixels]
-     */
-    public float[] getDimensions() {
-        return createDimensionArray(this.sprite);
-    }
-
-    /**
-     * Setter for the sprite's location parameter. Location is represented as a 2 element float
-     * array. Element 0 - x position [pixels] Element 1 - y position [pixels]
-     * 
-     * @param dimensions - float array containing the location
-     * 
-     */
-    public void setLocation(float[] location) {
-        this.sprite.setX(location[0]);
-        this.sprite.setY(location[1]);
-    }
-
-    /**
-     * Setter for the sprite's location parameter. Location is represented as an x and y float value
-     * 
-     * @param x - float containing the x position
-     * @param x - float containing the y position
-     */
-    public void setLocation(float x, float y) {
-        this.sprite.setX(x);
-        this.sprite.setY(y);
+        return Optional.empty();
     }
 
-    /**
-     * Getter for the sprite's location parameter. Location is represented as a 2 element float
-     * array. Element 0 - x position [pixels] Element 1 - y position [pixels]
-     */
-    public float[] getLocation() {
-        return createLocationArray(this.sprite);
+
+    public Health getHealth(){
+        return  (Health) getComponent("Health").get(); 
+    }
+    public SpriteComp getSpriteComponent(){
+        return  (SpriteComp) getComponent("Sprite").get(); 
+    }
+    public Position getPosition(){
+        return  (Position) getComponent("Position").get(); 
     }
 
-    private float[] createLocationArray(final Sprite sprite){
-        return new float[]{this.sprite.getX(), this.sprite.getY()};
+    public Attributes getAttributes(){
+        return  (Attributes) getComponent("Attributes").get(); 
+    }   
 
-    }
-
-    private float[] createDimensionArray(final Sprite sprite){
-        return new float[]{this.sprite.getWidth(), this.sprite.getHeight()};
-
-    }
-
+    public Collision getCollision(){
+        return  (Collision) getComponent("Collision").get(); 
+    }   
 
 
 }
