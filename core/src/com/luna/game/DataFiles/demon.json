@@ -1,0 +1,8 @@
+{
+    "name" : "demon",
+    "imagePath":"../assets/demon.png",
+    "initialLocation":[50,75],
+    "dimensions":[5,5],
+    "maxHealth":100,
+    "attack":100
+}

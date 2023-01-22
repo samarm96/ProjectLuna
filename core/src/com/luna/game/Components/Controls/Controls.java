@@ -1,4 +1,4 @@
-package com.luna.game.Engine;
+package com.luna.game.Components.Controls;
 
 import com.badlogic.gdx.math.Polygon;
 

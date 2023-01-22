@@ -198,6 +198,20 @@ public class RenderingFunctions {
         return new Polygon(vertices);
     }
 
+
+    public static Sprite CreateMissile(Texture texture, Sprite sprite, float height, float width){
+        Rectangle charRectangle = sprite.getBoundingRectangle();
+        Vector2 rectCenter = charRectangle.getCenter(new Vector2());
+
+        float[] corner = new float[] {rectCenter.x, rectCenter.y + charRectangle.getHeight()/2};
+
+        Sprite missile = new Sprite(texture);
+        missile.setPosition(corner[0], corner[1]);
+        missile.setSize(width, height);
+
+        return missile;
+    }
+
     /**
      * Utility array that concatenates two arrays of the same type
      * @param array1 the first array 

@@ -1,0 +1,9 @@
+{
+   
+        "imagePath":"../assets/kirby.jpg",
+        "initialLocation":[25,25],
+        "dimensions":[5,5],
+        "maxHealth":100,
+        "attack":100
+    
+}

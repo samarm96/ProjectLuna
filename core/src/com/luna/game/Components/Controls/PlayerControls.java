@@ -1,6 +1,10 @@
-package com.luna.game.Engine;
+package com.luna.game.Components.Controls;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Polygon;
+import com.luna.game.Engine.RenderingFunctions;
+import com.luna.game.Engine.Utilities;
 import com.luna.game.Entities.Player;
 
 public class PlayerControls implements Controls {
@@ -35,5 +39,13 @@ public class PlayerControls implements Controls {
         Polygon attackTriangle = RenderingFunctions.CreateTriangle(this.player.getSprite(), 10, 10);
 
         return attackTriangle;
+    }
+
+    public Sprite rangedAttack(Texture missileImage) {
+
+        Sprite missile = RenderingFunctions.CreateMissile(missileImage,
+                this.player.getSprite(), 5, 1);
+
+        return missile;
     }
 }

@@ -2,17 +2,17 @@ package com.luna.game.Entities;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.luna.game.Engine.Utilities;
+import com.badlogic.gdx.utils.Array;
+import com.luna.game.Components.Component;
 
 public class Entity {
 
-    final static int SCREEN_HEIGHT = Utilities.SCREEN_HEIGHT;
-    final static int SCREEN_WIDTH = Utilities.SCREEN_WIDTH;
-
     private Sprite sprite;
-
+    private Array<Component> components; 
+    
     public Entity(Texture image, float[] initialLocation, float[] initialDimensions) {
 
+        this.components = new Array<Component>();
         this.sprite = new Sprite(image);
         this.sprite.setX(initialLocation[0]);
         this.sprite.setY(initialLocation[1]);
@@ -22,6 +22,12 @@ public class Entity {
 
     }
 
+    public void addComponent(Component c){
+        components.add(c);
+    }
+    
+    public void removeComponent(Component c){
+    }
     /**
      * Setter for the player's sprite parameter.
      */

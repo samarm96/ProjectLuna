@@ -1,18 +1,15 @@
-package com.luna.game.Engine;
+package com.luna.game.Components;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 
-public class Utilities {
+public class Collision extends Component {
 
-
-    final public static int SCREEN_HEIGHT = Gdx.graphics.getHeight();
-    final public static int SCREEN_WIDTH = Gdx.graphics.getWidth();
-    final public static int WORLD_HEIGHT = 100;
-    final public static int WORLD_WIDTH = 100;
+    public Collision(){
+        setComponentNo(4);
+    }
 
     /**
      * Checks for collision between two rectangles
@@ -20,7 +17,7 @@ public class Utilities {
      * @param object1 the object being checked
      * @param object2 the object being checked against
      */
-    public static boolean CollisonCheck(Rectangle object1, Rectangle object2) {
+    public boolean CollisonCheck(Rectangle object1, Rectangle object2) {
         if (object1.overlaps(object2)) {
             return true;
         } else {
@@ -35,7 +32,7 @@ public class Utilities {
      * @param object1 the object being checked
      * @param object2 the object being checked against
      */
-    public static boolean CollisonCheck(Sprite object1, Sprite object2) {
+    public boolean CollisonCheck(Sprite object1, Sprite object2) {
         if (object1.getBoundingRectangle().overlaps(object2.getBoundingRectangle())) {
             return true;
         } else {
@@ -45,7 +42,7 @@ public class Utilities {
     }
 
 	// Check if Polygon intersects Sprite
-	public static boolean PolySpriteCollisionCheck(Polygon p, Sprite player) {
+	public boolean PolySpriteCollisionCheck(Polygon p, Sprite player) {
 		
         float[] vertices = new float[] {
 			
@@ -66,5 +63,4 @@ public class Utilities {
 	}
 
     
-
 }
