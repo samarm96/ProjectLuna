@@ -9,10 +9,10 @@ import com.badlogic.gdx.math.Rectangle;
 public class Utilities {
 
 
-    final public static int SCREEN_HEIGHT = Gdx.graphics.getHeight();
-    final public static int SCREEN_WIDTH = Gdx.graphics.getWidth();
-    final public static int WORLD_HEIGHT = 100;
-    final public static int WORLD_WIDTH = 100;
+    public static int SCREEN_HEIGHT = Gdx.graphics.getHeight();
+    public static int SCREEN_WIDTH = Gdx.graphics.getWidth();
+    public static int WORLD_HEIGHT = SCREEN_HEIGHT;
+    public static int WORLD_WIDTH = SCREEN_WIDTH;
 
     /**
      * Checks for collision between two rectangles
@@ -44,6 +44,18 @@ public class Utilities {
 
     }
 
+
+    public static boolean ProximityCheck(Sprite object1, Sprite object2, int radius) {
+        Rectangle rec = object1.getBoundingRectangle(); 
+        rec.setWidth(object1.getWidth() + radius);
+        rec.setHeight(object1.getHeight() + radius);
+
+        if (rec.overlaps(object2.getBoundingRectangle())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 	// Check if Polygon intersects Sprite
 	public static boolean PolySpriteCollisionCheck(Polygon p, Sprite player) {
 		

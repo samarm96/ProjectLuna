@@ -11,10 +11,17 @@ import com.luna.game.Components.Position;
 import com.luna.game.Components.SpriteComp;
 
 public class Entity {
-    private Array<Component> components;
 
-    public Entity() {
+    private Array<Component> components;
+    private String name;
+
+    public Entity(String name) {
         this.components = new Array<Component>();
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void addComponent(Component component) {

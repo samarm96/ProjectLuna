@@ -1,6 +1,7 @@
 package com.luna.game.DataFiles;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.luna.game.Components.Attributes;
 import com.luna.game.Components.Health;
 import com.luna.game.Components.SpriteComp;
@@ -12,13 +13,19 @@ public class PlayerData {
     private float[] dimensions;
     private int maxHealth;
     private float attack;
+    private Texture texture;
 
     public PlayerData(){
 
     }
     
     public void setImagePath(String imagePath){
-        this.imagePath = imagePath;
+        texture = new Texture(imagePath);
+    }
+
+    public void setTexture(Texture texture) {
+        this.texture = texture;
+        
     }
 
     public String getImagePath(){
@@ -57,9 +64,9 @@ public class PlayerData {
         return this.attack;
     }
 
-    public Player createPlayer(){
-        Player p = new Player();
-        SpriteComp spriteComponent = new SpriteComp(new Texture(this.imagePath), this.initialLocation, this.dimensions);
+    public Player createPlayer(String name){
+        Player p = new Player(name);
+        SpriteComp spriteComponent = new SpriteComp(this.texture, this.initialLocation, this.dimensions);
         Health health = new Health(maxHealth, maxHealth);
         Attributes attributes = new Attributes((int) this.attack);
         p.addComponent(spriteComponent);    
@@ -68,4 +75,17 @@ public class PlayerData {
     
         return p;
     }
+
+    public Player createPlayer(String name, TextureRegion region){
+        Player p = new Player(name);
+        SpriteComp spriteComponent = new SpriteComp(region, this.initialLocation, this.dimensions);
+        Health health = new Health(maxHealth, maxHealth);
+        Attributes attributes = new Attributes((int) this.attack);
+        p.addComponent(spriteComponent);    
+        p.addComponent(health);        
+        p.addComponent(attributes);        
+    
+        return p;
+    }
+
 }

@@ -1,8 +1,8 @@
 package com.luna.game.Entities;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.luna.game.Components.Component;
 import com.luna.game.Components.Health;
 import com.luna.game.Engine.Utilities;
@@ -25,7 +25,7 @@ public class HealthBar extends Component {
      * @param health
      * @param healthBarBuffer
      */
-    public HealthBar(Texture image, Entity character) {
+    public HealthBar(TextureRegion texture, Entity character) {
         
         
         this.character = character;
@@ -35,11 +35,11 @@ public class HealthBar extends Component {
         characterHealth = ((Health) this.character.getComponent("Health").get());
 
         this.healthBarBuffer = 0;
-        this.setSprite(RenderHealthBar());
-        this.getSprite().setTexture(image);
+        this.setSprite(RenderHealthBar(texture));
+        //this.getSprite().setTexture(image.getTexture());
         this.originalHealthBarWidth = this.getSprite().getWidth();
     }
-
+ 
     public void setSprite(Sprite sprite){
         this.healthBarSprite = sprite;
     }
@@ -53,7 +53,7 @@ public class HealthBar extends Component {
      * @param health
      * @return
      */
-    public Sprite RenderHealthBar() {
+    public Sprite RenderHealthBar(TextureRegion texture) {
 
         
         int maxHealth = this.characterHealth.getMaxHealth();
@@ -69,7 +69,7 @@ public class HealthBar extends Component {
             width = 0;
         }
 
-        Sprite healthBar = new Sprite();
+        Sprite healthBar = new Sprite(texture);
         healthBar.setPosition(xLocation, yLocation);
         healthBar.setSize(width, height);
 

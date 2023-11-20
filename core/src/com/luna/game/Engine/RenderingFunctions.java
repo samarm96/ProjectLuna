@@ -4,8 +4,8 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -26,7 +26,7 @@ public class RenderingFunctions {
      * @param downLeft a flag indicating whether the line should be rendered to the left or down
      * @returns a list containing each sprite to be rednered
      */
-    public static List<Wall> RenderWallLine(Texture texture, float x, float y, float width,
+    public static List<Wall> RenderWallLine(TextureRegion texture, float x, float y, float width,
             float height, int number, boolean verticalFlag, boolean downLeft) {
         List<Wall> walls = new ArrayList<>();
 
@@ -78,7 +78,7 @@ public class RenderingFunctions {
         float[] dimensions = new float[] {width, height};
         for (int i = 0; i < number; i++) {
             
-            Wall wall = new Wall();
+            Wall wall = new Wall("Basic Wall");
             SpriteComp spriteComp = new SpriteComp(texture, new float[]{0,0}, dimensions);
 
             if (verticalFlag == true) {
@@ -119,7 +119,7 @@ public class RenderingFunctions {
      * @param wallHeight the height of each individual sprite
      * @returns a list containing each sprite to be rednered
      */
-    public static List<Wall> RenderBoundaryWalls(Texture texture, float wallWidth,
+    public static List<Wall> RenderBoundaryWalls(TextureRegion texture, float wallWidth,
             float wallHeight) {
         List<Wall> boundaryWalls = new ArrayList<>();
 
@@ -144,7 +144,7 @@ public class RenderingFunctions {
      * 
      * @returns a list containing each sprite to be rednered
      */
-    public static List<Wall> RenderSquareFromCorner(Texture texture, float wallWidth,
+    public static List<Wall> RenderSquareFromCorner(TextureRegion texture, float wallWidth,
             float wallHeight, float cornerX, float cornerY, float squareHeight, float squareWidth) {
 
         List<Wall> boundaryWalls = new ArrayList<>();
@@ -213,7 +213,7 @@ public class RenderingFunctions {
     }
 
 
-    public static Sprite CreateMissile(Texture texture, Sprite sprite, float height, float width){
+    public static Sprite CreateMissile(TextureRegion texture, Sprite sprite, float height, float width){
         Rectangle charRectangle = sprite.getBoundingRectangle();
         Vector2 rectCenter = charRectangle.getCenter(new Vector2());
 

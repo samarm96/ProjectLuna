@@ -23,13 +23,5 @@ public interface Controls {
     /**
      * Moves the character up
      */    
-    public void moveUp();   
-
-    /**
-     * Performs a basic attack
-     */
-    public Polygon attack();
-
-
-    
+    public void moveUp();       
 }

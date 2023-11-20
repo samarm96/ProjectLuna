@@ -1,13 +1,20 @@
 package com.luna.game.Components;
-
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class SpriteComp extends Component {
     Sprite sprite;
 
-    public SpriteComp(Texture image, float[] initialLocation, float[] initialDimensions){
-        this.sprite = new Sprite(image);
+    public SpriteComp(Texture texture, float[] initialLocation, float[] initialDimensions){
+        this.sprite = new Sprite(texture);
+        this.sprite.setPosition(initialLocation[0], initialLocation[1]);
+        this.sprite.setSize(initialDimensions[0], initialDimensions[1]);
+        setComponentNo(2);
+    }
+
+    public SpriteComp(TextureRegion texture, float[] initialLocation, float[] initialDimensions){
+        this.sprite = new Sprite(texture);
         this.sprite.setPosition(initialLocation[0], initialLocation[1]);
         this.sprite.setSize(initialDimensions[0], initialDimensions[1]);
         setComponentNo(2);
@@ -17,5 +24,8 @@ public class SpriteComp extends Component {
         return this.sprite;
     }
 
+    public void setColorWhite() {
+        sprite.setColor(com.badlogic.gdx.graphics.Color.WHITE);
+    }
 
 }

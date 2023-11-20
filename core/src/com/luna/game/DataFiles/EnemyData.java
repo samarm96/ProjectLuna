@@ -1,6 +1,7 @@
 package com.luna.game.DataFiles;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.luna.game.Components.Attributes;
 import com.luna.game.Components.Health;
 import com.luna.game.Components.SpriteComp;
@@ -68,7 +69,7 @@ public class EnemyData {
     }
 
     public Enemy create(){
-        Enemy p = new Enemy();        
+        Enemy p = new Enemy("Demon");        
         SpriteComp spriteComponent = new SpriteComp(new Texture(this.imagePath), this.initialLocation, this.dimensions);
         Health health = new Health(maxHealth, maxHealth);
         Attributes attributes = new Attributes((int) this.attack);
@@ -79,4 +80,17 @@ public class EnemyData {
 
         return p;
     }
+
+    public Enemy create(TextureRegion region){
+        Enemy p = new Enemy("Demon");
+        SpriteComp spriteComponent = new SpriteComp(region, this.initialLocation, this.dimensions);
+        Health health = new Health(maxHealth, maxHealth);
+        Attributes attributes = new Attributes((int) this.attack);
+        p.addComponent(spriteComponent);    
+        p.addComponent(health);        
+        p.addComponent(attributes);        
+    
+        return p;
+    }
+
 }

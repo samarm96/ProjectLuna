@@ -53,7 +53,12 @@ public class DataUtilities {
 
         PlayerData data = json.fromJson(PlayerData.class, x);
 
-        return data.createPlayer();
+        data.setInitialLocation(new float[]{Utilities.WORLD_WIDTH/4f, Utilities.WORLD_HEIGHT/4f});
+        data.setDimensions(new float[]{Utilities.WORLD_WIDTH/20f, Utilities.WORLD_HEIGHT/20f});
+
+        TextureManager textureManager = TextureManager.getInstance();        
+
+        return data.createPlayer("Player1", textureManager.getHappyFaceUnfilled());
     }
 
     /**
@@ -74,8 +79,13 @@ public class DataUtilities {
             e.printStackTrace();
         }
 
-        EnemyData data = json.fromJson(EnemyData.class, x);
 
-        return data.create();
+        EnemyData data = json.fromJson(EnemyData.class, x);
+        data.setInitialLocation(new float[]{Utilities.WORLD_WIDTH/2f, 3*Utilities.WORLD_HEIGHT/4f});
+        data.setDimensions(new float[]{Utilities.WORLD_WIDTH/20f, Utilities.WORLD_HEIGHT/20f});
+
+        TextureManager textureManager = TextureManager.getInstance();        
+
+        return data.create(textureManager.getFancyPi());
     }
 }

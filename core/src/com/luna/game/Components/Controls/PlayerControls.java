@@ -1,10 +1,6 @@
 package com.luna.game.Components.Controls;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Polygon;
 import com.luna.game.Components.SpriteComp;
-import com.luna.game.Engine.RenderingFunctions;
 import com.luna.game.Engine.Utilities;
 import com.luna.game.Entities.Player;
 
@@ -23,33 +19,20 @@ public class PlayerControls implements Controls {
     }
 
     public void moveLeft() {
-        this.playerSprite.getSprite().translateX(-1);
+        this.playerSprite.getSprite().translateX(-WORLD_WIDTH/100);
     }
 
     public void moveRight() {
-        this.playerSprite.getSprite().translateX(1);
+        this.playerSprite.getSprite().translateX(WORLD_WIDTH/100);
     }
 
     public void moveDown() {
-        this.playerSprite.getSprite().translateY(-1);
+        this.playerSprite.getSprite().translateY(-WORLD_HEIGHT/100);
     }
 
     public void moveUp() {
-        this.playerSprite.getSprite().translateY(1);
+        this.playerSprite.getSprite().translateY(WORLD_HEIGHT/100);
     }
 
-    @Override
-    public Polygon attack() {
-        Polygon attackTriangle = RenderingFunctions.CreateTriangle(this.playerSprite.getSprite(), 10, 10);
 
-        return attackTriangle;
-    }
-
-    public Sprite rangedAttack(Texture missileImage) {
-
-        Sprite missile = RenderingFunctions.CreateMissile(missileImage,
-                this.playerSprite.getSprite(), 5, 1);
-
-        return missile;
-    }
 }
