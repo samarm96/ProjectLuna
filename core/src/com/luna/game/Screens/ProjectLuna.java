@@ -1,4 +1,4 @@
-package com.luna.game;
+package com.luna.game.Screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;

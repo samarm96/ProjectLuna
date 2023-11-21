@@ -1,13 +1,11 @@
 package com.luna.game.Components.Controls;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.luna.game.Engine.Utilities;
 import com.luna.game.Entities.Enemy;
 
 public class EnemyControls implements Controls {
 
-    final int WORLD_HEIGHT = Utilities.WORLD_HEIGHT;
-    final int WORLD_WIDTH = Utilities.WORLD_WIDTH;
+
 
     private Enemy enemy;
     private Sprite enemySprite;
@@ -39,6 +37,13 @@ public class EnemyControls implements Controls {
     public void moveUp() {
         // TODO Auto-generated method stub
 
+    }
+
+
+    @Override
+    public void openInventory() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'openInventory'");
     }
 
 }

@@ -3,13 +3,10 @@ package com.luna.game.Engine;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.luna.game.Entities.Enemy;
 import com.luna.game.Entities.Player;
+import com.luna.game.Utilities.DataUtilities;
+import com.luna.game.Utilities.Constants;
 
 public class Loader {
-
-    final static int SCREEN_HEIGHT = Utilities.SCREEN_HEIGHT;
-	final static int SCREEN_WIDTH = Utilities.SCREEN_WIDTH;
-	final int WORLD_HEIGHT = Utilities.WORLD_HEIGHT;
-	final int WORLD_WIDTH = Utilities.WORLD_WIDTH;
 
     public Loader(){
 
@@ -24,7 +21,7 @@ public class Loader {
     }
 
 	public OrthographicCamera loadCamera(){
-		OrthographicCamera camera = new OrthographicCamera(WORLD_WIDTH, WORLD_HEIGHT);
+		OrthographicCamera camera = new OrthographicCamera(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT);
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
 		camera.update();
 

@@ -1,4 +1,4 @@
-package com.luna.game;
+package com.luna.game.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;

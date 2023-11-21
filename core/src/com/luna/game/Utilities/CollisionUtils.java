@@ -1,4 +1,4 @@
-package com.luna.game.Engine;
+package com.luna.game.Utilities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 
-public class Utilities {
+public class CollisionUtils {
 
 
     public static int SCREEN_HEIGHT = Gdx.graphics.getHeight();

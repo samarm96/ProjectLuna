@@ -3,7 +3,6 @@ package com.luna.game.Engine;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
@@ -11,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.luna.game.Components.SpriteComp;
 import com.luna.game.Entities.Wall;
+import com.luna.game.Utilities.CollisionUtils;
 
 public class RenderingFunctions {
 
@@ -30,8 +30,8 @@ public class RenderingFunctions {
             float height, int number, boolean verticalFlag, boolean downLeft) {
         List<Wall> walls = new ArrayList<>();
 
-        final int worldHeight = Utilities.WORLD_HEIGHT;
-        final int worldWidth = Utilities.WORLD_WIDTH;
+        final int worldHeight = CollisionUtils.WORLD_HEIGHT;
+        final int worldWidth = CollisionUtils.WORLD_WIDTH;
 
         // Checks to ensure that the wall is within bounds
         if (y - height * number > worldHeight - y && verticalFlag == true
@@ -123,8 +123,8 @@ public class RenderingFunctions {
             float wallHeight) {
         List<Wall> boundaryWalls = new ArrayList<>();
 
-        float worldWidth = Utilities.WORLD_WIDTH;;
-        float worldHeight = Utilities.WORLD_HEIGHT;
+        float worldWidth = CollisionUtils.WORLD_WIDTH;;
+        float worldHeight = CollisionUtils.WORLD_HEIGHT;
 
         boundaryWalls = RenderSquareFromCorner(texture, wallWidth, wallHeight, (float) 0, (float) 0,
         worldHeight, worldWidth);

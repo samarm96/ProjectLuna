@@ -1,6 +1,5 @@
 package com.luna.game.Components.Controls;
 
-import com.badlogic.gdx.math.Polygon;
 
 public interface Controls {
     
@@ -23,5 +22,7 @@ public interface Controls {
     /**
      * Moves the character up
      */    
-    public void moveUp();       
+    public void moveUp();  
+    
+    public void openInventory();
 }

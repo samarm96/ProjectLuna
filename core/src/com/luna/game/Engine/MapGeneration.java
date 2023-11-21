@@ -3,6 +3,7 @@ package com.luna.game.Engine;
 import java.util.ArrayList;
 import java.util.List;
 import com.luna.game.Entities.Enemy;
+import com.luna.game.Utilities.DataUtilities;
 
 public class MapGeneration {
     

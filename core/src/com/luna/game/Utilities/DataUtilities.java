@@ -1,4 +1,4 @@
-package com.luna.game.Engine;
+package com.luna.game.Utilities;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import com.badlogic.gdx.utils.Json;
 import com.luna.game.DataFiles.EnemyData;
 import com.luna.game.DataFiles.PlayerData;
+import com.luna.game.Engine.TextureManager;
 import com.luna.game.Entities.Enemy;
 import com.luna.game.Entities.Player;
 
@@ -44,7 +45,7 @@ public class DataUtilities {
         String x = "";
         try {
             BufferedReader reader = new BufferedReader(
-                    new FileReader("../core/src/com/luna/game/DataFiles/player.json"));
+                    new FileReader("../core/src/com/luna/game/DataFiles/data/player.json"));
             x = reader.lines().collect(Collectors.joining());
             reader.close();
         } catch (IOException e) {
@@ -53,8 +54,8 @@ public class DataUtilities {
 
         PlayerData data = json.fromJson(PlayerData.class, x);
 
-        data.setInitialLocation(new float[]{Utilities.WORLD_WIDTH/4f, Utilities.WORLD_HEIGHT/4f});
-        data.setDimensions(new float[]{Utilities.WORLD_WIDTH/20f, Utilities.WORLD_HEIGHT/20f});
+        data.setInitialLocation(new float[]{Constants.WORLD_WIDTH/4f, Constants.WORLD_HEIGHT/4f});
+        data.setDimensions(new float[]{Constants.WORLD_WIDTH/20f, Constants.WORLD_HEIGHT/20f});
 
         TextureManager textureManager = TextureManager.getInstance();        
 
@@ -67,7 +68,7 @@ public class DataUtilities {
      * @return
      */
     public static Enemy loadEnemies(String name) {
-        String filepath = "../core/src/com/luna/game/DataFiles/" + name + ".json";
+        String filepath = "../core/src/com/luna/game/DataFiles/data/" + name + ".json";
         Json json = new Json();
         String x = "";
         try {
@@ -81,8 +82,8 @@ public class DataUtilities {
 
 
         EnemyData data = json.fromJson(EnemyData.class, x);
-        data.setInitialLocation(new float[]{Utilities.WORLD_WIDTH/2f, 3*Utilities.WORLD_HEIGHT/4f});
-        data.setDimensions(new float[]{Utilities.WORLD_WIDTH/20f, Utilities.WORLD_HEIGHT/20f});
+        data.setInitialLocation(new float[]{Constants.WORLD_WIDTH/2f, 3*Constants.WORLD_HEIGHT/4f});
+        data.setDimensions(new float[]{Constants.WORLD_WIDTH/20f, Constants.WORLD_HEIGHT/20f});
 
         TextureManager textureManager = TextureManager.getInstance();        
 
