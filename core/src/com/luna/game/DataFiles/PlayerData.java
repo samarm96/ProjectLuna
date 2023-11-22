@@ -65,7 +65,8 @@ public class PlayerData {
     }
 
     public Player createPlayer(String name){
-        Player p = new Player(name);
+        
+        Player p = Player.getInstance(name);
         SpriteComp spriteComponent = new SpriteComp(this.texture, this.initialLocation, this.dimensions);
         Health health = new Health(maxHealth, maxHealth);
         Attributes attributes = new Attributes((int) this.attack);
@@ -77,7 +78,7 @@ public class PlayerData {
     }
 
     public Player createPlayer(String name, TextureRegion region){
-        Player p = new Player(name);
+        Player p = Player.getInstance(name);
         SpriteComp spriteComponent = new SpriteComp(region, this.initialLocation, this.dimensions);
         Health health = new Health(maxHealth, maxHealth);
         Attributes attributes = new Attributes((int) this.attack);

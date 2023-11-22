@@ -13,9 +13,8 @@ public class PlayerControls implements Controls {
 
     private Player testPlayer;
     private SpriteComp playerSprite;
-    private ProjectLuna game;
 
-    public PlayerControls(Player player, ProjectLuna game) {
+    public PlayerControls(Player player) {
         this.testPlayer = player;
         this.playerSprite = (SpriteComp) testPlayer.getComponent("Sprite").get();
 
@@ -38,7 +37,7 @@ public class PlayerControls implements Controls {
     }
 
     @Override
-    public void openInventory() {
+    public void openInventory(ProjectLuna game) {
         game.setScreen(new InventoryScreen(game));
     }
 

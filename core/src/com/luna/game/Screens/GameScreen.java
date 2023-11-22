@@ -64,7 +64,7 @@ public class GameScreen implements Screen {
 
 		// Player
 		player = loader.loadPlayer();
-		pc = new PlayerControls(player, this.game);
+		pc = new PlayerControls(player);
 
 		// Enemy
 		enemy = loader.loadDemon();
@@ -164,6 +164,11 @@ public class GameScreen implements Screen {
 
 		Sprite playerSprite = ((SpriteComp) player.getComponent("Sprite").get()).getSprite();
 		boundaryFlag = false;
+
+
+		if (Gdx.input.isKeyPressed(Keys.I)) {
+			pc.openInventory(this.game);
+		}
 
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
 

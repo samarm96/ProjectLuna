@@ -1,5 +1,6 @@
 package com.luna.game.Components.Controls;
 
+import com.luna.game.Screens.ProjectLuna;
 
 public interface Controls {
     
@@ -24,5 +25,5 @@ public interface Controls {
      */    
     public void moveUp();  
     
-    public void openInventory();
+    public void openInventory(ProjectLuna game);
 }
