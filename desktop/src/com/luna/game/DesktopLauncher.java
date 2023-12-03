@@ -9,7 +9,7 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		//config.setWindowSizeLimits(800, 480, 800, 480);
-		config.setWindowedMode(800, 480);
+		config.setWindowedMode(720, 480);
 		config.setForegroundFPS(60);
 		config.setTitle("Project Luna");
 		new Lwjgl3Application(new ProjectLuna(), config);

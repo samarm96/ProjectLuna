@@ -1,11 +1,23 @@
 package com.luna.game.Screens;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapProperties;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.maps.objects.TextureMapObject;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.luna.game.Components.Health;
 import com.luna.game.Components.Position;
 import com.luna.game.Components.SpriteComp;
@@ -46,6 +58,10 @@ public class GameScreen implements Screen {
 	private MessageBox messageBox;
 	Loader loader;
 
+	private TiledMap map;
+	private OrthogonalTiledMapRenderer renderer;
+	private OrthographicCamera camera;
+
 	public GameScreen(final ProjectLuna game) {
 		this.game = game;
 
@@ -62,21 +78,64 @@ public class GameScreen implements Screen {
 		backgroundSprite.setSize(WORLD_WIDTH, WORLD_HEIGHT);
 
 
+
+		// Walls
+		//initWalls();
+
+		// Test Text
+		game.font.getData().setScale(WORLD_WIDTH / 700f, WORLD_HEIGHT / 700f);
+		game.font.setUseIntegerPositions(false);
+
+		// RENDER
+		map = new TmxMapLoader().load("../assets/maps/TestMap.tmx");
+		renderer = new OrthogonalTiledMapRenderer(map, 1f);
+
+
+		MapProperties prop = map.getProperties();
+
+		int mapWidth = prop.get("width", Integer.class);
+		int mapHeight = prop.get("height", Integer.class);
+		int tilePixelWidth = prop.get("tilewidth", Integer.class);
+		int tilePixelHeight = prop.get("tileheight", Integer.class);
+
+		int mapPixelWidth = mapWidth * tilePixelWidth;
+		int mapPixelHeight = mapHeight * tilePixelHeight;
+
+		TiledMapTileLayer wallLayer = (TiledMapTileLayer)map.getLayers().get("Walls");
+		walls = new ArrayList<>();
+
+		for(int x = 0; x < 30; x++) {
+			for(int y = 0; y < 20; y++) {
+				
+				Cell cell = wallLayer.getCell(x*24, y*24);
+				
+				if(cell != null) {
+					Wall wall = new Wall("Basic Wall");
+					float wallDimensions[] = new float[] {24f, 24f};
+					wall.addComponent(new SpriteComp(textureManager.getFilledSpace(), new float[] {x*24, y*24},
+							wallDimensions));
+
+					wall.addComponent(new Position(x*24, y*24));
+
+					walls.add(wall);
+				}
+
+			}
+		}
+
+
+		TiledMapTileLayer playerLayer = (TiledMapTileLayer)map.getLayers().get("Player");
+
 		// Player
 		player = loader.loadPlayer();
 		pc = new PlayerControls(player);
 
 		// Enemy
 		enemy = loader.loadDemon();
+		TiledMapTileLayer enemyLayer = (TiledMapTileLayer)map.getLayers().get("Player");
 
-		// Walls
-		initWalls();
-
-		// Test Text
-		game.font.getData().setScale(WORLD_WIDTH / 700f, WORLD_HEIGHT / 700f);
-		game.font.setUseIntegerPositions(false);
-
-
+		
+		
 	}
 
 
@@ -86,19 +145,23 @@ public class GameScreen implements Screen {
 
 		renderSys.update();
 
+		renderer.setView(renderSys.getCamera());
+		renderer.render();
+
+		
 		// -------- RENDER COORDINATE SYSTEM TO CAMERA --------
-		backgroundSprite.draw(game.batch);
+	//	backgroundSprite.draw(game.batch);
 
 		// -------- STATS RENDERING --------
-		game.font.draw(game.batch, PlayerStatsBox.getStats(player),
-				(float) (WORLD_WIDTH * (0.75f) + 2), (float) (WORLD_HEIGHT - 0.02 * WORLD_HEIGHT));
+	//	game.font.draw(game.batch, PlayerStatsBox.getStats(player),
+	//			(float) (WORLD_WIDTH * (0.75f) + 2), (float) (WORLD_HEIGHT - 0.02 * WORLD_HEIGHT));
 
 		// Message Box
 		if (messageBox.getMessages() != null) {
-			game.font.draw(game.batch, messageBox.getMessages(),
-					(float) (WORLD_WIDTH * (0.75f) + 2),
-					(float) (WORLD_HEIGHT - 0.1 * WORLD_HEIGHT), (float) (WORLD_WIDTH * .2f), 5,
-					true); // float targetWidth, int halign, boolean wrap
+	//		game.font.draw(game.batch, messageBox.getMessages(),
+	//				(float) (WORLD_WIDTH * (0.75f) + 2),
+	//				(float) (WORLD_HEIGHT - 0.1 * WORLD_HEIGHT), (float) (WORLD_WIDTH * .2f), 5,
+	//				true); // float targetWidth, int halign, boolean wrap
 		}
 
 		// -------- DRAW PLAYER CHARACTER --------
@@ -107,7 +170,7 @@ public class GameScreen implements Screen {
 
 		// -------- DRAW ENEMY CHARACTER --------
 		SpriteComp enemySpriteComponent = enemy.getSpriteComponent();
-		enemySpriteComponent.getSprite().draw(game.batch);
+	//	enemySpriteComponent.getSprite().draw(game.batch);
 
 		// -------- DRAW WALLS --------
 		for (Wall wall : walls) {
@@ -137,7 +200,7 @@ public class GameScreen implements Screen {
 		initWalls();
 		player = loader.loadPlayer();
 		enemy = loader.loadDemon();
-
+		
 	}
 
 	@Override
