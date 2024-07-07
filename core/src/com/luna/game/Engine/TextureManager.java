@@ -55,7 +55,6 @@ public class TextureManager {
         heart = new TextureRegion(tileset, width*3, height*0, width, height);
         fancyPi = new TextureRegion(tileset, width*4, height*1, width, height);
         filledSpace = new TextureRegion(tileset, width*11, height*13, width, height);
-
     }
 
     public TextureRegion getBlankSpace() {

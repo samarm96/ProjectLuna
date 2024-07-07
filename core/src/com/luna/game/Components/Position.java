@@ -3,11 +3,12 @@ package com.luna.game.Components;
 public class Position extends Component {
     float x;
     float y;
+    private static final Integer COMPONENT_NUMBER = ComponentNumberList.POSITION;
 
     public Position(float x, float y){
         this.x = x;
         this.y = y;
-        setComponentNo(1);
+        setComponentNo(COMPONENT_NUMBER);
     }
 
     public float[] getPos(){

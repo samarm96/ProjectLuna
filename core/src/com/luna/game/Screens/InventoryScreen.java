@@ -16,8 +16,9 @@ public class InventoryScreen implements Screen {
     ProjectLuna game;
     private Stage stage;
     private Player player;
+    
     public InventoryScreen(ProjectLuna game) {
-        player = Player.getInstance();
+        player = Player.getPlayer();
         this.game = game;
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);

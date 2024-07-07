@@ -16,7 +16,6 @@ public class RenderingSystem {
     private OrthographicCamera camera; // a reference to our camera
     
     public RenderingSystem(SpriteBatch batch){
-
         renderQueue = new Array<Entity>();
 
         this.batch = batch; 
@@ -38,7 +37,6 @@ public class RenderingSystem {
     }
     
     public void updateCamera(int width, int height) {
-
         camera.setToOrtho(false, width, height);
         camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
         camera.update();

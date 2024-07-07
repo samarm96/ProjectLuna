@@ -10,9 +10,13 @@ public class PlayerStatsBox {
     public static String getStats(Player player) {
         StringBuffer sb = new StringBuffer();
 
-        sb.append("Name: " + "Player 1\n");
-        sb.append(String.format("Health: %s/%s\n",player.getHealth().getHealth(),player.getHealth().getMaxHealth()));
-        sb.append("Attack: " + player.getAttributes().getAttack() + "\n\n");
+        sb.append("Name: " + player.getName() + "\n");
+        sb.append(String.format(
+            "Health: %s/%s\n",
+            player.getHealth().getHealth(),player.getHealth().getMaxHealth()));
+            
+        sb.append(
+            "Attack: " + player.getAttributes().getAttack() + "\n\n");
 
         return sb.toString();
     }

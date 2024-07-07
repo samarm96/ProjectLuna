@@ -1,5 +1,6 @@
 package com.luna.game.Components.Controls;
 
+import com.luna.game.Components.ComponentNumberList;
 import com.luna.game.Components.SpriteComp;
 import com.luna.game.Entities.Player;
 import com.luna.game.Screens.InventoryScreen;
@@ -12,28 +13,30 @@ public class PlayerControls implements Controls {
     final int WORLD_WIDTH = Constants.WORLD_WIDTH;
 
     private Player testPlayer;
-    private SpriteComp playerSprite;
+    private Integer SPRITE_COMPONENT_NO = ComponentNumberList.SPRITECOMP;
 
     public PlayerControls(Player player) {
         this.testPlayer = player;
-        this.playerSprite = (SpriteComp) testPlayer.getComponent("Sprite").get();
-
     }
 
     public void moveLeft() {
-        this.playerSprite.getSprite().translateX(-WORLD_WIDTH/100);
+        SpriteComp playerSprite = (SpriteComp) testPlayer.getComponent(SPRITE_COMPONENT_NO);
+        playerSprite.getSprite().translateX(-WORLD_WIDTH/100);
     }
 
     public void moveRight() {
-        this.playerSprite.getSprite().translateX(WORLD_WIDTH/100);
+        SpriteComp playerSprite = (SpriteComp) testPlayer.getComponent(SPRITE_COMPONENT_NO);
+        playerSprite.getSprite().translateX(WORLD_WIDTH/100);
     }
 
     public void moveDown() {
-        this.playerSprite.getSprite().translateY(-WORLD_HEIGHT/100);
+        SpriteComp playerSprite = (SpriteComp) testPlayer.getComponent(SPRITE_COMPONENT_NO);
+        playerSprite.getSprite().translateY(-WORLD_HEIGHT/100);
     }
 
     public void moveUp() {
-        this.playerSprite.getSprite().translateY(WORLD_HEIGHT/100);
+        SpriteComp playerSprite = (SpriteComp) testPlayer.getComponent(SPRITE_COMPONENT_NO);
+        playerSprite.getSprite().translateY(WORLD_HEIGHT/100);
     }
 
     @Override

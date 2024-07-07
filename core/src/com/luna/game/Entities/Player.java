@@ -5,18 +5,18 @@ public class Player extends Entity {
 
     private static Player player;
 
-    public Player(String name) {
+    private Player(String name) {
         super(name);
     }
 
-    public static Player getInstance(String name) {
+    public static Player getPlayer(String name) {
         if (player == null)
             player = new Player(name);
 
         return player;
     }
 
-    public static Player getInstance() {
+    public static Player getPlayer() {
         if (player == null)
             player = new Player("Player 1");
 

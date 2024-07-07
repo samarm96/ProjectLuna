@@ -8,16 +8,14 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
-import com.badlogic.gdx.maps.objects.TextureMapObject;
+import com.badlogic.gdx.maps.MapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Rectangle;
+import com.luna.game.Components.ComponentNumberList;
 import com.luna.game.Components.Health;
 import com.luna.game.Components.Position;
 import com.luna.game.Components.SpriteComp;
@@ -27,7 +25,6 @@ import com.luna.game.Engine.RenderingFunctions;
 import com.luna.game.Engine.RenderingSystem;
 import com.luna.game.Engine.TextureManager;
 import com.luna.game.Engine.UI.MessageBox;
-import com.luna.game.Engine.UI.PlayerStatsBox;
 import com.luna.game.Entities.Enemy;
 import com.luna.game.Entities.Player;
 import com.luna.game.Entities.Wall;
@@ -77,8 +74,6 @@ public class GameScreen implements Screen {
 		backgroundSprite.setPosition(0, 0);
 		backgroundSprite.setSize(WORLD_WIDTH, WORLD_HEIGHT);
 
-
-
 		// Walls
 		//initWalls();
 
@@ -90,25 +85,26 @@ public class GameScreen implements Screen {
 		map = new TmxMapLoader().load("../assets/maps/TestMap.tmx");
 		renderer = new OrthogonalTiledMapRenderer(map, 1f);
 
-
 		MapProperties prop = map.getProperties();
 
 		int mapWidth = prop.get("width", Integer.class);
 		int mapHeight = prop.get("height", Integer.class);
-		int tilePixelWidth = prop.get("tilewidth", Integer.class);
-		int tilePixelHeight = prop.get("tileheight", Integer.class);
+		//int tilePixelWidth = prop.get("tilewidth", Integer.class);
+		//int tilePixelHeight = prop.get("tileheight", Integer.class);
+		//int xWidth = mapWidth/tilePixelWidth;
+		//int yHeight = mapHeight/tilePixelHeight;
 
-		int mapPixelWidth = mapWidth * tilePixelWidth;
-		int mapPixelHeight = mapHeight * tilePixelHeight;
+		//int mapPixelWidth = mapWidth * tilePixelWidth;
+		//int mapPixelHeight = mapHeight * tilePixelHeight;
 
 		TiledMapTileLayer wallLayer = (TiledMapTileLayer)map.getLayers().get("Walls");
 		walls = new ArrayList<>();
-
-		for(int x = 0; x < 30; x++) {
-			for(int y = 0; y < 20; y++) {
+		 
+		for(int x = 0; x < mapWidth; x++) {
+			for(int y = 0; y < mapHeight; y++) {
 				
-				Cell cell = wallLayer.getCell(x*24, y*24);
-				
+				Cell cell = wallLayer.getCell(x, y);
+				System.out.println(cell);
 				if(cell != null) {
 					Wall wall = new Wall("Basic Wall");
 					float wallDimensions[] = new float[] {24f, 24f};
@@ -123,19 +119,13 @@ public class GameScreen implements Screen {
 			}
 		}
 
-
-		TiledMapTileLayer playerLayer = (TiledMapTileLayer)map.getLayers().get("Player");
-
 		// Player
 		player = loader.loadPlayer();
+		player.getPosition().setPos(null);
 		pc = new PlayerControls(player);
-
+		
 		// Enemy
 		enemy = loader.loadDemon();
-		TiledMapTileLayer enemyLayer = (TiledMapTileLayer)map.getLayers().get("Player");
-
-		
-		
 	}
 
 
@@ -150,7 +140,7 @@ public class GameScreen implements Screen {
 
 		
 		// -------- RENDER COORDINATE SYSTEM TO CAMERA --------
-	//	backgroundSprite.draw(game.batch);
+		//backgroundSprite.draw(game.batch);
 
 		// -------- STATS RENDERING --------
 	//	game.font.draw(game.batch, PlayerStatsBox.getStats(player),
@@ -192,7 +182,7 @@ public class GameScreen implements Screen {
 		SCREEN_WIDTH = Constants.SCREEN_WIDTH;
 		WORLD_HEIGHT = Constants.WORLD_HEIGHT;
 		WORLD_WIDTH = Constants.WORLD_WIDTH;
-		updateObjects();
+		//updateObjects();
 	}
 	private void updateObjects() {
 		game.font.getData().setScale(WORLD_WIDTH / 700f, WORLD_HEIGHT / 700f);
@@ -220,12 +210,11 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
-
 	}
 
 	private void listen(float delta) {
 
-		Sprite playerSprite = ((SpriteComp) player.getComponent("Sprite").get()).getSprite();
+		Sprite playerSprite = ((SpriteComp) player.getComponent(ComponentNumberList.SPRITECOMP)).getSprite();
 		boundaryFlag = false;
 
 
@@ -250,7 +239,7 @@ public class GameScreen implements Screen {
 				}
 
 				Sprite wallSprite =
-						(((SpriteComp) walls.get(i).getComponent("Sprite").get()).getSprite());
+						(((SpriteComp) walls.get(i).getComponent(ComponentNumberList.SPRITECOMP)).getSprite());
 				if (CollisionUtils.CollisonCheck(playerSprite, wallSprite)) {
 					pc.moveRight();
 					break;
@@ -282,7 +271,7 @@ public class GameScreen implements Screen {
 				}
 
 				Sprite wallSprite =
-						(((SpriteComp) walls.get(i).getComponent("Sprite").get()).getSprite());
+						(((SpriteComp) walls.get(i).getComponent(ComponentNumberList.SPRITECOMP)).getSprite());
 				if (CollisionUtils.CollisonCheck(playerSprite, wallSprite)) {
 					pc.moveLeft();
 					break;
@@ -313,7 +302,7 @@ public class GameScreen implements Screen {
 				}
 
 				Sprite wallSprite =
-						(((SpriteComp) walls.get(i).getComponent("Sprite").get()).getSprite());
+						(((SpriteComp) walls.get(i).getComponent(ComponentNumberList.SPRITECOMP)).getSprite());
 				if (CollisionUtils.CollisonCheck(playerSprite, wallSprite)) {
 					pc.moveDown();
 					break;
@@ -344,7 +333,7 @@ public class GameScreen implements Screen {
 				}
 
 				Sprite wallSprite =
-						(((SpriteComp) walls.get(i).getComponent("Sprite").get()).getSprite());
+						(((SpriteComp) walls.get(i).getComponent(ComponentNumberList.SPRITECOMP)).getSprite());
 				if (CollisionUtils.CollisonCheck(playerSprite, wallSprite)) {
 					pc.moveUp();
 				}

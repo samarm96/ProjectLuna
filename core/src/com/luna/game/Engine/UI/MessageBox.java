@@ -28,6 +28,4 @@ public class MessageBox {
 
         return sb.toString();
     }
-
-
 }

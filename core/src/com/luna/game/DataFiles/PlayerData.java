@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.luna.game.Components.Attributes;
 import com.luna.game.Components.Health;
+import com.luna.game.Components.Position;
 import com.luna.game.Components.SpriteComp;
 import com.luna.game.Entities.Player;
 
@@ -66,26 +67,31 @@ public class PlayerData {
 
     public Player createPlayer(String name){
         
-        Player p = Player.getInstance(name);
+        Player p = Player.getPlayer(name);
         SpriteComp spriteComponent = new SpriteComp(this.texture, this.initialLocation, new float[]{24f, 24f});
         Health health = new Health(maxHealth, maxHealth);
         Attributes attributes = new Attributes((int) this.attack);
+        Position pos = new Position(initialLocation[0], initialLocation[1]);
         p.addComponent(spriteComponent);    
         p.addComponent(health);        
         p.addComponent(attributes);        
+        p.addComponent(pos);
     
         return p;
     }
 
     public Player createPlayer(String name, TextureRegion region){
-        Player p = Player.getInstance(name);
+        Player p = Player.getPlayer(name);
         SpriteComp spriteComponent = new SpriteComp(region, this.initialLocation, new float[]{24f, 24f});
         Health health = new Health(maxHealth, maxHealth);
         Attributes attributes = new Attributes((int) this.attack);
+        Position pos = new Position(initialLocation[0], initialLocation[1]);
+
         p.addComponent(spriteComponent);    
         p.addComponent(health);        
         p.addComponent(attributes);        
-    
+        p.addComponent(pos);
+
         return p;
     }
 

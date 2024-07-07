@@ -1,55 +1,25 @@
-package com.luna.game.Entities;
+package com.luna.game.Entities.items;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.luna.game.Entities.Entity;
 
-public class InventoryItem extends Entity {
-
-
-    public enum ItemAttribute {
-        CONSUMABLE(1), EQUIPPABLE(2), STACKABLE(4);
-
-        private int attribute;
-
-        ItemAttribute(int attribute) {
-            this.attribute = attribute;
-        }
-
-        public int getValue() {
-            return attribute;
-        }
-
-    }
-
-    public enum ItemUseType {
-        ITEM_RESTORE_HEALTH(1), ITEM_RESTORE_MP(2), ITEM_DAMAGE(4), WEAPON_ONEHAND(
-                8), WEAPON_TWOHAND(16), WAND_ONEHAND(32), WAND_TWOHAND(64), ARMOR_SHIELD(
-                        128), ARMOR_HELMET(
-                                256), ARMOR_CHEST(512), ARMOR_FEET(1024), QUEST_ITEM(2048);
-
-        private int itemUseType;
-
-        ItemUseType(int itemUseType) {
-            this.itemUseType = itemUseType;
-        }
-
-        public int getValue() {
-            return itemUseType;
-        }
-    }
-    public enum ItemTypeID {
-        NONE
-    }
-
-
+public class Item extends Entity {
+    
     private int itemAttributes;
     private int itemUseType;
     private int itemUseTypeValue;
-    private ItemTypeID itemTypeID;
+    private ItemTypeId itemTypeID;
     private String itemShortDescription;
     private int itemValue;
 
-    public InventoryItem(TextureRegion textureRegion, int itemAttributes, ItemTypeID itemTypeID,
-            int itemUseType, int itemUseTypeValue, int itemValue) {
+    public Item(
+        TextureRegion textureRegion, 
+        int itemAttributes, 
+        ItemTypeId itemTypeID,
+        int itemUseType, 
+        int itemUseTypeValue, 
+        int itemValue) {
+
         super(itemTypeID.name());
 
         this.itemTypeID = itemTypeID;
@@ -76,11 +46,11 @@ public class InventoryItem extends Entity {
         this.itemValue = itemValue;
     }
 
-    public ItemTypeID getItemTypeID() {
+    public ItemTypeId getItemTypeID() {
         return itemTypeID;
     }
 
-    public void setItemTypeID(ItemTypeID itemTypeID) {
+    public void setItemTypeID(ItemTypeId itemTypeID) {
         this.itemTypeID = itemTypeID;
     }
 

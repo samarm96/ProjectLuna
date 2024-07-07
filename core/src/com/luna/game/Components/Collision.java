@@ -7,8 +7,10 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Collision extends Component {
 
+    private static final Integer COMPONENT_NUMBER = ComponentNumberList.COLLISION;
+
     public Collision(){
-        setComponentNo(4);
+        setComponentNo(COMPONENT_NUMBER);
     }
 
     /**

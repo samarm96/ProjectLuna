@@ -4,11 +4,12 @@ public class Health extends Component {
     
     private int health;
     private int maxHealth;
+    private static final Integer COMPONENT_NUMBER = ComponentNumberList.HEALTH;
 
     public Health(int maxHealth, int health){
         this.maxHealth = maxHealth;
         this.health = health;
-        setComponentNo(3);
+        setComponentNo(COMPONENT_NUMBER);        
     }
 
     /**

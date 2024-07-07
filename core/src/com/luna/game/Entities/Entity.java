@@ -1,22 +1,23 @@
 package com.luna.game.Entities;
 
-import java.util.Optional;
-
-import com.badlogic.gdx.utils.Array;
+import java.util.HashMap;
+import java.util.Map;
 import com.luna.game.Components.Attributes;
 import com.luna.game.Components.Collision;
 import com.luna.game.Components.Component;
+import com.luna.game.Components.ComponentNumberList;
 import com.luna.game.Components.Health;
 import com.luna.game.Components.Position;
 import com.luna.game.Components.SpriteComp;
 
 public class Entity {
 
-    private Array<Component> components;
     private String name;
 
+    private Map<Integer, Component> componentMap;
+
     public Entity(String name) {
-        this.components = new Array<Component>();
+        this.componentMap = new HashMap<>();
         this.name = name;
     }
 
@@ -25,126 +26,38 @@ public class Entity {
     }
 
     public void addComponent(Component component) {
-        components.add(component);
+        componentMap.put(component.getComponentNo(), component);
     }
 
-    public void removeComponent(String s) {
-        int num = 0;
-
-        // Assign a number based on the component provided
-        switch (s) {
-            case "Position":
-                num = 1;
-                for (int i = 0; i < components.size; i++) {
-                    if (components.get(i).getComponentNo() == num) {
-                        components.removeIndex(i);
-                    }
-                }
-            case "Sprite":
-                num = 2;
-                for (int i = 0; i < components.size; i++) {
-                    if (components.get(i).getComponentNo() == num) {
-                        components.removeIndex(i);
-                    }
-                }
-            case "Health":
-                num = 3;
-                for (int i = 0; i < components.size; i++) {
-                    if (components.get(i).getComponentNo() == num) {
-                        components.removeIndex(i);
-                    }
-                }
-            case "Collision":
-                num = 4;
-                for (int i = 0; i < components.size; i++) {
-                    if (components.get(i).getComponentNo() == num) {
-                        components.removeIndex(i);
-                    }
-                }
-            case "Attributes":
-                num = 5;
-                for (int i = 0; i < components.size; i++) {
-                    if (components.get(i).getComponentNo() == num) {
-                        components.removeIndex(i);
-                    }
-                }
-        }
-        // TODO: Need to add exception here if the wrong input was given
-        if (num == 0) {
-
-        }
-
-
-
+    public void removeComponent(Integer componentNo) {
+        componentMap.remove(componentNo);
     }
 
-    public Optional<Component> getComponent(String s) {
-        int num = 0;
-        //
-        // Assign a number based on the component provided
-        switch (s) {
-            case "Position":
-                num = 1;
-                for (Component component : components) {
-                    if (component.getComponentNo() == num) {
-                        return Optional.of(component);
-                    }
-                }
-            case "Sprite":
-                num = 2;
-                for (Component component : components) {
-                    if (component.getComponentNo() == num) {
-                        return Optional.of(component);
-                    }
-                }
-            case "Health":
-                num = 3;
-                for (Component component : components) {
-                    if (component.getComponentNo() == num) {
-                        return Optional.of(component);
-                    }
-                }
-            case "Collision":
-                num = 4;
-                for (Component component : components) {
-                    if (component.getComponentNo() == num) {
-                        return Optional.of(component);
-                    }
-                }
-            case "Attributes":
-                num = 5;
-                for (Component component : components) {
-                    if (component.getComponentNo() == num) {
-                        return Optional.of(component);
-                    }
-                }
+    public Component getComponent(Integer componentNo) {
+        if(componentMap.containsKey(componentNo)){
+            return componentMap.get(componentNo);
+        } else {
+            throw new RuntimeException();
         }
-
-        // TODO: Need to add exception here if the wrong input was given
-        if (num == 0) {
-            return Optional.empty();
-        }
-
-        return Optional.empty();
     }
 
 
     public Health getHealth(){
-        return  (Health) getComponent("Health").get(); 
+        return (Health) componentMap.get(ComponentNumberList.HEALTH);
     }
     public SpriteComp getSpriteComponent(){
-        return  (SpriteComp) getComponent("Sprite").get(); 
+        return  (SpriteComp) componentMap.get(ComponentNumberList.SPRITECOMP);
     }
     public Position getPosition(){
-        return  (Position) getComponent("Position").get(); 
+        return  (Position) componentMap.get(ComponentNumberList.POSITION);
     }
 
     public Attributes getAttributes(){
-        return  (Attributes) getComponent("Attributes").get(); 
+        return  (Attributes) componentMap.get(ComponentNumberList.ATTRIBUTES); 
     }   
 
     public Collision getCollision(){
-        return  (Collision) getComponent("Collision").get(); 
+        return  (Collision) componentMap.get(ComponentNumberList.COLLISION);
     }   
 
 
